@@ -48,7 +48,6 @@
         ],
         "absensi":[
             "composer install",
-            "npm install",
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan serve --host=localhost --port=3000"
