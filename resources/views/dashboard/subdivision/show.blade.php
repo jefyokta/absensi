@@ -3,10 +3,7 @@
 @section('container')
     <div
         class="glass rounded-lg p-5 max-h-content flex justify-between items-center flex-wrap flex-md-nowrap  pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="font-semibold p-2 text-xl">Data Karyawan</h1>
-        <div class="flex justify-between rounded-lg p-1.5 bg-blue-500  ">
-            <a href="/dashboard/employees/create" class="text-white text-s">Tambah Data</a>
-        </div>
+        <h1 class="font-semibold p-2 text-xl">Data Karyawan {{ $divisions->name }}</h1>
     </div>
 
     <div class="row">
@@ -19,7 +16,7 @@
                                 <th scope="col" class="px-6 py-3 rounded-ss-lg">
                                     ID</th>
                                 <th scope="col" class="px-6 py-3 ">NAMA</th>
-                                <th scope="col" class="px-6 py-3 ">DIVISI</th>
+                                <th scope="col" class="px-6 py-3 ">ROLE</th>
                                 <th scope="col" class="px-6 py-3 ">ALAMAT</th>
                                 <th scope="col" class="px-6 py-3 ">NOMOR TELEPON</th>
                                 <th scope="col" class="px-6 py-3 ">EMAIL</th>
@@ -33,12 +30,10 @@
 
 
                                         @if ($user->division)
-                                    <td class="px-6 py-4 text-blue-500 cursor-pointer" data-popover-target="popover-user-{{ $user->id }}"
-                                        >{{ $user->name }}</td>
+                                    <td class="px-6 py-4 text-blue-500 cursor-pointer"
+                                        data-popover-target="popover-user-{{ $user->id }}">{{ $user->name }}</td>
 
-                                    <td  class="px-6 py-4 " >
-                                        {{ $user->division->name }}
-                                    </td>
+
                                     <div data-popover id="popover-user-{{ $user->id }}" role="tooltip"
                                         class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
                                         <div class="p-3">
@@ -58,7 +53,7 @@
                                             </p>
                                             <p class="mb-3 text-sm font-normal">
                                                 <a href="#"
-                                                    class="hover:underline">{{ $user->division->division->name ?? '-' }}</a>
+                                                    class="hover:underline">{{ $user->division->division->name ?? 'Not in A division' }}</a>
                                             </p>
                                             <p class="mb-4 text-sm">{{ $user->division->name }}
                                             </p>
@@ -70,11 +65,9 @@
                                     </div>
                                 @else
                                     <td class="px-6 py-4">{{ $user->name }}</td>
-                                    <td class="px-6 py-4 ">
-                                        <p class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i>-</p>
-                                    </td>
-                            @endif
 
+                            @endif
+                            <td class="px-6 py-4 ">{{ $user->role ?? '-' }}</td>
 
                             <td class="px-6 py-4 ">{{ $user->address }}</td>
                             <td class="px-6 py-4 ">{{ $user->phonenumber }}</td>

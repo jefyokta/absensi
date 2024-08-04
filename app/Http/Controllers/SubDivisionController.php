@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 
 use App\Models\Division;
+use App\Models\User;
 
 class SubDivisionController extends Controller
 {
@@ -84,5 +85,15 @@ class SubDivisionController extends Controller
         } catch (\Throwable $th) {
             return redirect('/dashboard/sub_division')->with('error', 'oops, Something Wrong, try again later');
         }
+    }
+    public function show(Request $request)
+    {
+
+        $id = $request->query('sd') ?? abort(404);
+        return view('dashboard.subdivision.show', [
+            'title' => 'Dashboard | Empolyees',
+            'divisions' => SubDivisions::find($id) ?? abort(404),
+            'users' => $users = User::where('divisions_id', $id)->get()
+        ]);
     }
 }

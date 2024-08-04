@@ -20,18 +20,16 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $q = User::join('divisions', 'users.divisions_id', '=', 'divisions.id')
-            ->join('sub_divisions', 'sub_divisions.id', '=', 'users.divisions_id')
-            ->select('users.*', 'divisions.name as division_name', 'sub_divisions.name as sub_division_name');
-        if ($request->query('div') ?? false) {
-            # code...
-        }
+        // $q = User::join('divisions', 'users.divisions_id', '=', 'divisions.id')
+        //     ->join('sub_divisions', 'sub_divisions.id', '=', 'users.divisions_id')
+        //     ->select('users.*', 'divisions.name as division_name', 'sub_divisions.name as sub_division_name');
 
-        $users = $q->get();
+
+        // $users = $q->get();
         return view('dashboard.employee.index', [
-            'title' => 'Dashboard | Add Empolyees',
+            'title' => 'Dashboard | Empolyees',
             'divisions' => SubDivisions::all(),
-            'users' => $users
+            'users' => $users = User::all()
         ]);
     }
 
@@ -61,6 +59,7 @@ class UserController extends Controller
                 'email' => 'required|unique:users|email|max:255',
                 'password' => 'required|min:5|max:255',
                 'confirmpassword' => 'required|min:5|max:255',
+                "role" => "nullable"
 
             ]);
             // dd($validatedData);
@@ -123,6 +122,7 @@ class UserController extends Controller
                 'phonenumber' => 'required|max:255',
                 'email' => 'required|email|max:255',
                 'password' => 'nullable|min:5|max:255',
+                'role'=>'nullable'
 
             ]);
             $user = User::find($validatedData['id']);

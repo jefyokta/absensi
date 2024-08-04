@@ -32,7 +32,7 @@
                                     <td class="px-6 py-4 ">{{ $sub_division->id }}</th>
                                     <td class="px-6 py-4 ">{{ $sub_division->name }}</td>
                                     <td class="px-6 py-4 flex  align-center">
-                                        <a href="#" class="badge border-0">
+                                        <a href="/dashboard/sub_division/employees?sd={{ $sub_division->id }}" class="badge border-0">
                                             <svg class="w-6 h-6 text-blue-800 dark:text-white" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">

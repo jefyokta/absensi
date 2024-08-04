@@ -34,8 +34,9 @@ Route::get('/qrcode', [ImageController::class, 'qrcode'])->middleware('auth');
 Route::post('/dashboard/print', [DashboardController::class, 'print'])->middleware('admin');
 
 
-Route::get('/dashboard/sub_division', [SubDivisionController::class, 'index'])->middleware('admin');
 Route::put('/dashboard/sub_division', [SubDivisionController::class, 'update'])->middleware('admin');
+Route::get('/dashboard/sub_division', [SubDivisionController::class, 'index'])->middleware('admin');
+Route::get('/dashboard/sub_division/employees', [SubDivisionController::class, 'show'])->middleware('admin');
 Route::post('/dashboard/sub_division', [SubDivisionController::class, 'store'])->middleware('admin');
 Route::delete('/dashboard/sub_division', [SubDivisionController::class, 'delete'])->middleware('admin');
 Route::get('/dashboard/sub_division/create', [SubDivisionController::class, 'create'])->middleware('admin');
