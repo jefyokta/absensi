@@ -23,10 +23,7 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return view('pages.home.index', [
-        "title" => "Home",
-        'active' => 'home'
-    ]);
+    return response()->redirectTo('/login') ;
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
