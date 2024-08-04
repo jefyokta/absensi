@@ -1,27 +1,23 @@
-## required
-php 8.1+
-node js
+# Required
+php 8.1+ <br>
+node js <br>
 composer
 
 
-# get Started 
+# Prepare
 
 ```
 composer run create-absensi
-
 ```
 
 now, u have an .env file, set the variable before do the next step
 
 ```
 composer run prepare-absensi
-
-
 ```
 
-# start
+# Start
 
 ```
 composer run absensi
-
 ```
