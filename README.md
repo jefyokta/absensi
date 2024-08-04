@@ -7,8 +7,6 @@ composer
 # get Started 
 
 ```
-sh
-
 composer run create-absensi
 
 ```
@@ -16,8 +14,6 @@ composer run create-absensi
 now, u have an .env file, set the variable before do the next step
 
 ```
-sh
-
 composer run prepare-absensi
 
 
@@ -26,8 +22,6 @@ composer run prepare-absensi
 # start
 
 ```
-sh
-
 composer run absensi
 
 ```
