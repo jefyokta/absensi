@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -19,7 +20,7 @@ class ProfileController extends Controller
         return view('dashboard.profile.index', [
             "title" => "Dashboard | Profile",
             'active' => 'dashboard',
-            'users' => User::where('id', $user_id)->get(),
+            'user' => User::find($user_id)
         ]);
     }
 
@@ -50,8 +51,9 @@ class ProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit()
     {
+        $user = User::find(auth()->user()->id);
         return view('dashboard.profile.edit', [
             "title" => "Dashboard | Profile Edit",
             'user' => $user
@@ -61,19 +63,29 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
+
         $rules = [
-            'name' => 'required',
-            'divisions_id' => 'required',
             'address' => 'required',
             'phonenumber' => 'required|numeric',
             'email' => 'required|email'
         ];
 
-        $validatedData = $request->validate($rules);
+        $validator = Validator::make($request->all(), $rules);
 
-        User::where('id', $user->id)->update($validatedData);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            $errorMessages = $errors->all();
+            $errorString = implode(', ', $errorMessages);
+            return back()->with('error',$errorString);
+        }
+        $user = auth()->user()->id;
+        User::find($user)->update([
+            'address' => $request->address,
+            'phonenumber' => $request->phonenumber,
+            'email' => $request->email,
+        ]);
 
         return redirect('/dashboard/profile')->with('success', 'User data has been updated!');
     }

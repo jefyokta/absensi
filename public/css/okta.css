@@ -1,0 +1,26 @@
+.glass{
+    background-color: rgba(255, 255, 255, 0.228) ;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: .1px solid rgba(0, 0, 0, 0.1);
+
+
+}
+.glass-black{
+    background-color: rgba(1, 17, 66, 0.128) ;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: .1px solid rgba(0, 0, 0, 0.1);
+
+
+}
+
+.bg-body{
+    background-image: url('/images/bgs.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+
+
+}

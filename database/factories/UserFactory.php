@@ -2,28 +2,38 @@
 
 namespace Database\Factories;
 
+use App\Models\Division;
+use App\Models\SubDivisions;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\User;
+use FakerFactory;
+use App\Services\QrCodeGen;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = User::class;
+
     public function definition(): array
     {
+        $name = fake()->name();
+        $email = fake()->unique()->safeEmail();
+
+
         return [
-            'name' => fake()->name(),
-            'divisions_id' => mt_rand(1, 3),
-            'address' => fake()->address(),
-            'phonenumber' => fake()->phoneNumber(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $name,
+            'divisions_id' => SubDivisions::all()->random()->id,
+            'address' => fake('id_ID')->address(),
+            'phonenumber' => fake('id_ID')->phoneNumber(),
+            'email' => $email,
             'email_verified_at' => now(),
+            'qrcode' => QrCodeGen::generate(),
+            "role" => fake()->jobTitle(),
             'password' => bcrypt('karyawan'), // password
             'remember_token' => Str::random(10),
         ];

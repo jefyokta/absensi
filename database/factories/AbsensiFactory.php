@@ -2,7 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Absensi;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Date;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Absensi>
@@ -14,15 +18,15 @@ class AbsensiFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Absensi::class;
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'divisions_id' => mt_rand(1, 3),
-            'date' => fake()->date('d/m/Y'),
+            'user_id' => User::all()->random()->id,
+            'date' => Carbon::now()->format('d/m/Y'),
             'in' => fake()->date('H:i'),
             'out' => fake()->date('H:i'),
-            'status' => 'Attend'
+            'status' => rand(0,1)
         ];
     }
 }

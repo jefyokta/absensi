@@ -75,7 +75,7 @@ class DivisionController extends Controller
 
         $validatedData = $request->validate($rules);
 
-        Division::where('id', $division->id)->update($validatedData);
+        Division::find($division->id)->update($validatedData);
 
         return redirect('/dashboard/divisions')->with('success', 'Divisions have been updated!');
     }

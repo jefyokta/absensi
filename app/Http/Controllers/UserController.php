@@ -7,19 +7,31 @@ use App\Models\Absensi;
 use App\Models\Division;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\SubDivisions;
+use App\Services\QrCodeGen;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view ('dashboard.employee.index', [
+
+        $q = User::join('divisions', 'users.divisions_id', '=', 'divisions.id')
+            ->join('sub_divisions', 'sub_divisions.id', '=', 'users.divisions_id')
+            ->select('users.*', 'divisions.name as division_name', 'sub_divisions.name as sub_division_name');
+        if ($request->query('div') ?? false) {
+            # code...
+        }
+
+        $users = $q->get();
+        return view('dashboard.employee.index', [
             'title' => 'Dashboard | Add Empolyees',
-            'divisions' => Division::all(),
-            'users' => User::all()
+            'divisions' => SubDivisions::all(),
+            'users' => $users
         ]);
     }
 
@@ -28,9 +40,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view ('dashboard.employee.create', [
+        return view('dashboard.employee.create', [
             'title' => 'Dashboard | Add Empolyees',
-            'divisions' => Division::all()
+            'divisions' => SubDivisions::all()
         ]);
     }
 
@@ -39,20 +51,37 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'divisions_id' => 'required|max:255',
-            'address' => 'required',
-            'phonenumber' => 'required|unique:users|max:255',
-            'email' => 'required|unique:users|email|max:255',
-            'password' => 'required|min:5|max:255',
-        ]);
+        try {
 
-        $validatedData['password'] = Hash::make($request->input('password'));
+            $validatedData = $request->validate([
+                'name' => 'required|max:255',
+                'divisions_id' => 'required|max:255',
+                'address' => 'required',
+                'phonenumber' => 'required|unique:users|max:255',
+                'email' => 'required|unique:users|email|max:255',
+                'password' => 'required|min:5|max:255',
+                'confirmpassword' => 'required|min:5|max:255',
 
-        User::create($validatedData);
+            ]);
+            // dd($validatedData);
 
-        return redirect('/dashboard/employees')->with('success', 'Users have been added!');
+            if ($validatedData['password'] !== $validatedData['confirmpassword']) {
+                return back()->with('error', 'Password Does`nt Match');
+
+                # code...
+            }
+            $validatedData['qrcode'] = QrCodeGen::generate();
+            $validatedData['password'] = Hash::make($request->input('password'));
+
+            User::create($validatedData);
+
+            return redirect('/dashboard/employees')->with('success', 'Users have been added!');
+            //code...
+        } catch (\Throwable $th) {
+            // dd($th);
+            return back()->with('error', $th->getMessage());
+            //throw $th;
+        }
     }
 
     /**
@@ -60,9 +89,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view ('dashboard.employee.show', [
-            'title' => 'Dashboard | Add Empolyees',
-            'divisions' => Division::all(),
+
+        return view('dashboard.profile.index', [
+            "title" => "Dashboard | $user->name",
+            'active' => 'dashboard',
             'user' => $user
         ]);
     }
@@ -72,9 +102,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view ('dashboard.employee.edit', [
+        return view('dashboard.employee.edit', [
             'title' => 'Dashboard | Edit Empolyees',
-            'divisions' => Division::all(),
+            'divisions' => SubDivisions::all(),
             'user' => $user
         ]);
     }
@@ -82,28 +112,48 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
-        $rules = [
-            'name' => 'required|max:255',
-            'divisions_id' => 'required',
-            'address' => 'required',
-            'phonenumber' => 'required|numeric',
-            'email' => 'required|email',
-            'password' => 'nullable',
-        ];
+        try {
+            $validatedData = $request->validate([
+                'id' => "required",
+                'name' => 'required|max:255',
+                'divisions_id' => 'required|max:255',
+                'address' => 'required',
+                'phonenumber' => 'required|max:255',
+                'email' => 'required|email|max:255',
+                'password' => 'nullable|min:5|max:255',
 
-        $validatedData = $request->validate($rules);
+            ]);
+            $user = User::find($validatedData['id']);
+            if (!$user) {
+                return redirect()->back()->with('error', 'User Tidak Ditemukan');
+            }
+            $u = User::where('email', $validatedData['email'])->first();
 
-        if (is_null($validatedData['password']) || $validatedData['password'] === '') {
-            $validatedData['password'] = $user->password;
-        } else {
-            $validatedData['password'] = Hash::make($validatedData['password']);
+            // dd($u->email && $u->id !== $user->id);
+            if ($u->email && $u->id !== $user->id) {
+                return redirect()->back()->with('error', 'Email Sudah DiPakai');
+            }
+            $a = User::where('phonenumber', $validatedData['phonenumber'])->first();
+            if ($a->phonenumber && $a->id !== $user->id) {
+                return redirect()->back()->with('error', 'Nomor Hp Sudah DiPakai');
+            }
+
+
+            if (is_null($validatedData['password']) || $validatedData['password'] === '') {
+                $validatedData['password'] = $user->password;
+            } else {
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
+
+            User::find($user->id)->update($validatedData);
+
+            return redirect('/dashboard/employees')->with('success', 'User data has been updated!');
+        } catch (\Throwable $th) {
+            // dd($th);
+            return redirect()->back()->with('error', $th->getMessage());
         }
-
-        User::where('id', $user->id)->update($validatedData);
-
-        return redirect('/dashboard/employees')->with('success', 'User data has been updated!');
     }
 
     /**

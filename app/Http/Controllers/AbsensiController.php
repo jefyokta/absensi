@@ -8,6 +8,7 @@ use App\Models\Division;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Stmt\TryCatch;
 
 class AbsensiController extends Controller
 {
@@ -16,21 +17,42 @@ class AbsensiController extends Controller
      */
     public function index()
     {
+
         $user_id = auth()->user()->id;
-        $user_name = auth()->user()->name;
 
-        $absensiIn = Absensi::where('name', $user_name)->get('in')->last()->in ?? '-';
-        $absensiOut = Absensi::where('name', $user_name)->get('out')->last()->out ?? '-';
 
-        return view('dashboard.absensi.index', [
-            "title" => "Dashboard | Absensi In",
-            'active' => 'dashboard',
-            'absensis' => Absensi::where('name', $user_name)->latest()->first(),
-            "absensi_in" => $absensiIn,
-            "absensi_out" => $absensiOut,
-            'users' => User::where('id', $user_id)->get(),
-            'divisions' => Division::all()
-        ]);
+
+
+        $absensi = Absensi::where('user_id', $user_id)->where('date', '=', date('d/m/Y'))->first();
+        if(!$absensi) return view('dashboard.absensi.notyet',['title'=>'Jangan Lupa Absen']);
+        $absensiIn = $absensi->in ?? false;
+        $absensiOut = $absensi->out ?? false;
+        if (is_null($absensi->status)) {
+            return view('dashboard.absensi.index', [
+                "title" => "Dashboard | Absensi In",
+                'active' => 'dashboard',
+                'absensis' => Absensi::where('user_id', $user_id)->latest()->first(),
+                "absensi_in" => $absensiIn,
+                "absensi_out" => $absensiOut,
+                'user' => User::where('id', $user_id)->first(),
+                'divisions' => Division::all()
+            ]);
+        }
+        if ($absensiIn && !$absensi->status === 0 && $absensiOut) {
+            // dd($absensi);
+            // $absensi = $absensiIn;
+            $title = 'Semangat!';
+
+            return view('dashboard.absensi.working', compact('title', 'absensi'));
+        } elseif ($absensi->status === 0) {
+            // dd('memek kerja aning jangan bolos');
+            return view('dashboard.absensi.hopeurok', ['title' => 'see u next time']);
+        } else if ($absensiIn && $absensi->out !== null) {
+            $title = 'Terimakasih';
+
+            return view('dashboard.absensi.complete', compact('title', 'absensi'));
+        }
+        $absensiOut = Absensi::where('user_id', $user_id)->where('date', '=', date('d/m/Y'))->first()->out ?? '';
     }
 
     /**
@@ -46,60 +68,51 @@ class AbsensiController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'divisions_id' => 'required',
-            'status' => 'required',
-            'date' => 'required',
-            'in' => 'required',
-            'out' => 'nullable',
-            'image' => 'image|file|max:1024',
-            'reason' => 'nullable'
-        ]);
 
-        if($request->file('image')) {
-            $validatedData['image'] = $request->file('image')->store('bukti');
+        try {
+            $validatedData = $request->validate([
+                'why' => 'required',
+                'image' => 'image|file|max:1024|nullable',
+                'reason' => 'nullable'
+            ]);
+
+            if ($request->file('image')) {
+                $validatedData['image'] = $request->file('image')->store('bukti');
+            }
+            $validatedData['status'] = false;
+            $validatedData['reason'] = $validatedData['why'] . ' : ' . $validatedData['reason'];
+            $validatedData['date'] = date('d/m/Y');
+            $validatedData['in'] = date('h:i');
+            $validatedData['user_id'] = auth()->user()->id;
+            $absensi = Absensi::create($validatedData);
+        } catch (\Throwable $th) {
+            dd($th);
         }
 
-        $absensi = Absensi::create($validatedData);
-
-        return redirect('/dashboard/absensi/' . $absensi->id . '/edit')->with('success', 'Thank you for taking attendance today!');
+        return redirect('/dashboard/absensi/')->with('success', 'Terima Kasih Sudah Mengabarkan!');
     }
 
 
     /**
      * Display the specified resource.
      */
-    public function show(Absensi $absensi)
+    public function show($id)
     {
-        return view('dashboard.absensi.show', [
-            "title" => "Dashboard | Absensi",
-            'active' => 'dashboard',
-            'absensis' => Absensi::all(),
-            'absensi' => $absensi,
-        ]);
+        $absensi = Absensi::find($id);
+        if(!$absensi) return abort(404);
+        if ($absensi->user->id == auth()->user()->id || auth()->user()->is_admin) {
+            return view('dashboard.absensi.show', [
+                "title" => "Dashboard | Absensi",
+                'active' => 'dashboard',
+                'absensi' => $absensi,
+            ]);
+        }
+        return abort(401);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Absensi $absensi)
-    {
-        $user_id = auth()->user()->id;
-        $user_name = auth()->user()->name;
-
-        $absensiIn = Absensi::where('name', $user_name)->get('in')->last()->in ?? '-';
-        $absensiOut = Absensi::where('name', $user_name)->get('out')->last()->out ?? '-';
-
-        return view('dashboard.absensi.edit', [
-            "title" => "Dashboard | Absensi Out",
-            'users' => User::where('id', $user_id)->get(),
-            'divisions' => Division::all(),
-            'absensi' => $absensi,
-            "absensi_in" => $absensiIn,
-            "absensi_out" => $absensiOut,
-        ]);
-    }
 
     /**
      * Update the specified resource in storage.
@@ -107,18 +120,15 @@ class AbsensiController extends Controller
     public function update(Request $request, Absensi $absensi)
     {
         $rules = [
-            'name' => 'required',
-            'divisions_id' => 'required',
-            'status' => 'required',
-            'date' => 'required',
-            'in',
+            'id' => 'required',
             'out' => 'required',
         ];
 
         $validatedData = $request->validate($rules);
-        Absensi::where('id', $absensi->id)->update($validatedData);
+        $update['out'] = $validatedData['out'];
+        Absensi::where('id', $absensi->id)->update($update);
 
-        return redirect('/dashboard/absensi')->with('success', 'Thank you for working today!');
+        return redirect('/dashboard/absensi')->with('success', 'Terima Kasih Sampai Jumpa lagi!');
     }
 
     /**
