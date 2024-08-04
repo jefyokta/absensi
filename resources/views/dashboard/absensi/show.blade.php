@@ -19,10 +19,13 @@
                         <b>Jam Masuk :</b> {{ $absensi->in }}<br>
                         <b>Jam Keluar :</b> {{ $absensi->out ?? '-'}}<br>
                         <b>Status :</b> {{ $absensi->status ? 'Hadir' : 'Tidak Hadir' }}<br>
+
+                        @if (!is_null($absensi->status) && !$absensi->status)
+
                         <b>Bukti :</b> <button class="badge bg-dark border-0 text-decoration-none"
                             data-image-src="{{ asset('storage/' . $absensi->image) }}">Lihat Bukti</button><br>
                         <b>Alasan :</b> {{ $absensi->reason ?? '-' }}
-                        @if ($absensi->status == 0 && !is_null($absensi->image))
+                        @if (!is_null($absensi->image))
                             <div class="col-6 my-5">
                                 <div class="card">
                                     <h5 class="card-header"><i class="fa-solid fa-image"></i> Detail Bukti Sakit</h5>
@@ -42,6 +45,7 @@
 
                                 </div>
                             </div>
+                        @endif
                         @endif
                         <div class="my-5">
                             <a href="/dashboard" class="bg-blue-500 p-2 rounded-md text-sm text-white">Kembali</a>
