@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 { facingMode: "environment" },
                 {
                     fps: 10,
-                    qrbox: { width: 200, height: 200 }, 
+                    qrbox: { width: 200, height: 200 },
                 },
                 onScanSuccess,
                 onScanError
@@ -33,3 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }, 500);
 });
+
+
+
+
+
