@@ -204,13 +204,15 @@
                     <div
                         class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600">
                     </div>
-                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">mode</span>
+                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        id="title">Normal</span>
                 </label>
             </li>
 
         </ul>
     </div>
 </aside>
+
 
 
 <div id="popup-modal" tabindex="-1"
@@ -250,18 +252,85 @@
 </div>
 
 <script>
-    const mode = document.getElementById('mode')
+    document.addEventListener('DOMContentLoaded', () => {
+        const mode = document.getElementById('mode')
 
-    mode.addEventListener('change', () => {
-        console.log(mode.checked);
+        const setMode = (val) => {
+            const date = new Date();
+            date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = "mode=" + val + "; " + expires + "; path=/";
+        }
 
-        if (mode.checked) {
-            document.querySelector('body').classList.remove('bg-body2')
-            document.querySelector('body').classList.add('bg-body')
+        const getMode = () => {
+            const name = "mode=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const cookiesArray = decodedCookie.split(';');
+
+            for (let i = 0; i < cookiesArray.length; i++) {
+                let cookie = cookiesArray[i].trim();
+
+                if (cookie.indexOf(name) === 0) {
+                    return cookie.substring(name.length, cookie.length);
+                }
+            }
+
+            return null;
+
+        }
+
+        const x = getMode()
+
+        if (x === null) {
+            mode.checked = true
+            setMode('normal')
+        }
+        const y = getMode()
+        if (y === 'normal') {
+            mode.checked = true
+
 
         } else {
-            document.querySelector('body').classList.remove('bg-body')
-            document.querySelector('body').classList.add('bg-body2')
+            mode.checked = false
+
+
         }
+
+
+
+        const ganti = () => {
+            if (mode.checked) {
+                document.querySelector('body').classList.remove('bg-body2')
+                document.querySelector('body').classList.add('bg-body')
+                document.getElementById('title').innerHTML = 'Normal'
+
+            } else {
+                document.querySelector('body').classList.remove('bg-body')
+                document.querySelector('body').classList.add('bg-body2')
+                document.getElementById('title').innerHTML = 'Earthy'
+
+            }
+
+        }
+        ganti()
+
+        mode.addEventListener('change', () => {
+
+            if (mode.checked) {
+                document.querySelector('body').classList.remove('bg-body2')
+                document.querySelector('body').classList.add('bg-body')
+                document.getElementById('title').innerHTML = 'Normal'
+                setMode('normal')
+
+            } else {
+                document.querySelector('body').classList.remove('bg-body')
+                document.querySelector('body').classList.add('bg-body2')
+                document.getElementById('title').innerHTML = 'Earthy'
+                setMode('earthy')
+
+            }
+        })
+
+
     })
 </script>
