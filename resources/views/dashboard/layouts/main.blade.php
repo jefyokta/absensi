@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/logoabsen.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/okta.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -50,7 +51,7 @@
         @endif
 
         @if (session()->has('error'))
-       
+
             <div id="toast-danger"
                 class="z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 fixed bottom-5 right-5"
                 role="alert">
