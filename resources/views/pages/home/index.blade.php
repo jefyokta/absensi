@@ -11,9 +11,8 @@
     <title>Login</title>
 </head>
 
-<body class="bg-body">
-
-    <form class="max-w-md mx-auto glass p-10 rounded-lg mt-20" accept="/login" method="POST">
+<body class="bg-body 	" style="">
+    <div class="max-w-md mx-auto glass h-5/6 backdrop-blur-sm p-10 rounded-lg mt-20 z-50">
 
         @if (auth()->user())
             <h1 class="text-center font-semibold text-lg">Hai {{ auth()->user()->name }}</h1>
@@ -22,13 +21,13 @@
                 <a href="/dashboard" class="text-blue-500 text-center">Kembali ke dashboard</a>
             </p>
         @else
-        <p class="text-center my-5">
-            <h1 class="text-center font-semibold text-lg">Hai ,Login untuk melanjutkan</h1>
-            <a href="/dashboard" class="text-blue-500 text-center">Login</a>
-        </p>
+            <h1 class="text-center font-semibold text-lg">Hai, Login untuk melanjutkan</h1>
+            <p class="text-center my-5">
+                <a href="/dashboard" class="text-blue-500 text-center">Login</a>
+            </p>
         @endif
 
-    </form>
+    </div>
 
 </body>
 

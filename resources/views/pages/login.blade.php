@@ -65,32 +65,46 @@
             </button>
         </div>
     @endif
+    <div class="max-w-md mx-auto   rounded-lg mt-20 relative">
 
-    <form class="max-w-md mx-auto glass p-10 rounded-lg mt-20" accept="/login" method="POST">
-        <h1 class="h3 my-10 font-semibold text-2xl ">Login</h1>
-        @csrf
-        <div class="relative z-0 w-full mb-5 group">
-            <input type="email" name="email" id="floating_email"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" " required />
-            <label for="floating_email"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email
-                address</label>
+        <div class="w-full justify-center relative  p-0 top-0 py-5 glass rounded-ss-lg rounded-se-lg overflow-hidden bg-contain  "
+            style="background-image: url('/images/pp.jeg')">
+            <div class="flex flex-col items-center z-50">
+                <img src="/logoabsen.png" alt="" srcset="" class="h-16 brightness-100">
+                <h1 class="h3 mb-5 font-semibold text-4xl text-slate-300 z-50 ">Login</h1>
+                <p class="text-slate-100 mb-10">Absensi PT ABM Teluk Panji</p>
+            </div>
+
+            <img src="/images/pp.jpeg" alt=""
+                class="h-full mix-blend-multiply blur-sm brightness-50 absolute top-0 left-0 -z-50">
         </div>
-        <div class="relative z-0 w-full mb-5 group">
-            <input type="password" name="password" id="floating_password"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                placeholder=" " required />
-            <label for="floating_password"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
-        </div>
+        <form class="glass p-10 relative" accept="/login" method="POST">
+
+
+            @csrf
+            <div class="relative z-0 w-full mb-5 group">
+                <input type="email" name="email" id="floating_email"
+                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" " required />
+                <label for="floating_email"
+                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email
+                    address</label>
+            </div>
+            <div class="relative z-0 w-full mb-5 group">
+                <input type="password" name="password" id="floating_password"
+                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" " required />
+                <label for="floating_password"
+                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+            </div>
 
 
 
-        <button type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 my-10">Submit</button>
+            <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 my-10">Submit</button>
 
-    </form>
+        </form>
+    </div>
 
 </body>
 

@@ -23,6 +23,7 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/home', function () {
+
     return view('pages.home.index');
 });
 Route::get('/', function () {
