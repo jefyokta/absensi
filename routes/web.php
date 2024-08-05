@@ -22,9 +22,13 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', function () {
-    return response()->redirectTo('/login');
+Route::get('/home', function () {
+    return view('pages.home.index');
 });
+Route::get('/', function () {
+    return view('pages.home.index');
+});
+
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
