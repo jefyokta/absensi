@@ -26,7 +26,10 @@
     class="fixed top-0 left-0 z-40 w-64 h-full  transition-transform -translate-x-full sm:translate-x-0"
     aria-label="Sidebar">
     <div class="h-5/6 rounded-lg m-2.5 px-3 py-5 overflow-y-auto glass">
-        <h1 class="text-slate-700 font-bold text-xl mb-2">Absensi</h1>
+        <a href="/dashboard" class="flex items-center ps-2.5 mb-5">
+            <img src="/images/logoabsen.png" class="h-8 me-1 " alt="logo" />
+            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Absen</span>
+         </a>
         <ul class="space-y-2 font-medium">
             <li>
                 <a href="/dashboard"

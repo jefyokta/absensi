@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Division;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\SubDivisions;
 
 class DivisionController extends Controller
 {
@@ -48,9 +49,15 @@ class DivisionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Division $division)
+    public function show(Request $request)
     {
-        //
+
+        $id = $request->query('d') ?? abort(404);
+        return view('dashboard.division.show', [
+            'sub_divisions' => SubDivisions::select('*')->where('division_id','=',$id)->get(),
+            'title' => Division::find($id)->name
+        ]);
+
     }
 
     /**

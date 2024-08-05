@@ -3,10 +3,8 @@
 @section('container')
     <div
         class="glass rounded-lg p-5 max-h-content flex justify-between items-center flex-wrap flex-md-nowrap  pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="font-semibold p-2 text-xl">Divisi</h1>
-        <div class="flex justify-between rounded-lg p-1.5 bg-blue-500  ">
-            <a href="/dashboard/divisions/create" class="text-white text-s">Tambah Data</a>
-        </div>
+        <h1 class="font-semibold p-2 text-xl">Sub Divisi di {{ $title }}</h1>
+
     </div>
 
 
@@ -26,13 +24,13 @@
                             </tr>
                         </thead>
                         <tbody class="glass rounded-es-lg">
-                            @foreach ($divisions as $division)
+                            @foreach ($sub_divisions as $sub_division)
                                 <tr class="dark:bg-gray-800 rounded-lg">
 
-                                    <td class="px-6 py-4 ">{{ $division->id }}</th>
-                                    <td class="px-6 py-4 ">{{ $division->name }}</td>
+                                    <td class="px-6 py-4 ">{{ $sub_division->id }}</th>
+                                    <td class="px-6 py-4 ">{{ $sub_division->name }}</td>
                                     <td class="px-6 py-4 flex  align-center">
-                                        <a href="/dashboard/divisions/sub?d={{ $division->id }}" class="badge border-0">
+                                        <a href="/dashboard/sub_division/employees?sd={{ $sub_division->id }}" class="badge border-0">
                                             <svg class="w-6 h-6 text-blue-800 dark:text-white" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -45,10 +43,10 @@
 
                                         </a>
 
-                                        <a href="/dashboard/divisions/{{ $division->id }}/edit" class="badge border-0"><svg
-                                                class="w-6 h-6 text-green-800 dark:text-white" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                fill="currentColor" viewBox="0 0 24 24">
+                                        <a href="/dashboard/sub_division/edit?id={{ $sub_division->id }}"
+                                            class="badge border-0"><svg class="w-6 h-6 text-green-800 dark:text-white"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" fill="currentColor" viewBox="0 0 24 24">
                                                 <path fill-rule="evenodd"
                                                     d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z"
                                                     clip-rule="evenodd" />
@@ -59,7 +57,7 @@
                                         </a>
 
                                         <button type="button" class="badge border-0" data-modal-target="delete-modal"
-                                            data-modal-toggle="delete-modal" onclick="setId({{ $division->id }})"><svg
+                                            data-modal-toggle="delete-modal" onclick="setId({{ $sub_division->id }})"><svg
                                                 class="w-6 h-6 text-red-800 dark:text-white" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="currentColor" viewBox="0 0 24 24">
@@ -100,11 +98,10 @@
                     </svg>
                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Hapus Divisi Ini?</h3>
                     <div class="flex justify-center w-full">
-                        <form action="/dashboard/divisions/{{ $division->id }}" method="POST" class="d-inline"
-                            id="delete">
+                        <form action="/dashboard/sub_division" method="POST" class="d-inline" id="delete">
                             @method('delete')
                             @csrf
-
+                            <input type="hidden" name="id" id="sid">
                             <button data-modal-hide="delete-modal" type="submit"
                                 class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                                 Yes, I'm sure
@@ -120,8 +117,8 @@
     </div>
     <script>
         const setId = (id) => {
-            const deleteForm = document.getElementById('delete');
-            deleteForm.setAttribute('action', '/dashboard/divisions/' + id);
+            const deleteForm = document.getElementById('sid');
+            deleteForm.value = id;
         }
     </script>
 @endsection
