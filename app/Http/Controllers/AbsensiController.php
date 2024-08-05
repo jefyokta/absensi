@@ -19,12 +19,9 @@ class AbsensiController extends Controller
     {
 
         $user_id = auth()->user()->id;
-
-
-
-
+        if (auth()->user()->is_admin) abort(404);
         $absensi = Absensi::where('user_id', $user_id)->where('date', '=', date('d/m/Y'))->first();
-        if(!$absensi) return view('dashboard.absensi.notyet',['title'=>'Jangan Lupa Absen']);
+        if (!$absensi) return view('dashboard.absensi.notyet', ['title' => 'Jangan Lupa Absen']);
         $absensiIn = $absensi->in ?? false;
         $absensiOut = $absensi->out ?? false;
         if (is_null($absensi->status)) {
@@ -53,6 +50,8 @@ class AbsensiController extends Controller
             return view('dashboard.absensi.complete', compact('title', 'absensi'));
         }
         $absensiOut = Absensi::where('user_id', $user_id)->where('date', '=', date('d/m/Y'))->first()->out ?? '';
+        $title = 'absensi';
+        return view('dashboard.absensi.notyet', compact('title', 'absensi'));
     }
 
     /**
@@ -99,7 +98,7 @@ class AbsensiController extends Controller
     public function show($id)
     {
         $absensi = Absensi::find($id);
-        if(!$absensi) return abort(404);
+        if (!$absensi) return abort(404);
         if ($absensi->user->id == auth()->user()->id || auth()->user()->is_admin) {
             return view('dashboard.absensi.show', [
                 "title" => "Dashboard | Absensi",
@@ -119,6 +118,8 @@ class AbsensiController extends Controller
      */
     public function update(Request $request, Absensi $absensi)
     {
+        if (!auth()->user()->is_admin) abort(404);
+
         $rules = [
             'id' => 'required',
             'out' => 'required',

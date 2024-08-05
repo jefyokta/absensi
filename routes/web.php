@@ -23,7 +23,7 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return response()->redirectTo('/login') ;
+    return response()->redirectTo('/login');
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -51,8 +51,9 @@ Route::get('/dashboard/reports', [DashboardController::class, 'reports'])->middl
 Route::get('/dashboard/myreports', [DashboardController::class, 'myreports'])->middleware('auth');
 Route::get('/edit', [ProfileController::class, 'edit'])->middleware('auth');
 Route::put('/dashboard/employee', [UserController::class, 'update'])->middleware('admin');
+Route::get('/dashboard/divisions/sub', [DivisionController::class, 'show'])->middleware('admin');
+Route::put('/dashboard/editprofile', [ProfileController::class, 'update'])->middleware('auth');
 Route::resource('/dashboard/absensi', AbsensiController::class)->middleware('auth');
 Route::resource('/dashboard/divisions', DivisionController::class)->middleware('admin');
-Route::get('/dashboard/divisions/sub', [DivisionController::class,'show'])->middleware('admin');
 Route::resource('/dashboard/profile', ProfileController::class, ['parameters' => ['profile' => 'user',]])->middleware('auth');
 Route::resource('/dashboard/employees', UserController::class, ['parameters' => ['employees' => 'user',]])->middleware('admin');

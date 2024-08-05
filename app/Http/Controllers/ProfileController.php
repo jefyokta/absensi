@@ -65,29 +65,46 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
+        try {
+            $validatedData = $request->validate([
+                'id' => "required",
+                'name' => 'required|max:255',
+                'address' => 'required',
+                'phonenumber' => 'required|max:255',
+                'email' => 'required|email|max:255',
+                'password' => 'nullable|min:5|max:255',
 
-        $rules = [
-            'address' => 'required',
-            'phonenumber' => 'required|numeric',
-            'email' => 'required|email'
-        ];
+            ]);
+            $user = User::find($validatedData['id']);
+            if (!$user) {
+                return redirect()->back()->with('error', 'User Tidak Ditemukan');
+            }
+            if ($user->id !== auth()->user()->id) redirect()->back()->with('error', 'Forbidden');
+            $u = User::where('email', $validatedData['email'])->first();
 
-        $validator = Validator::make($request->all(), $rules);
+            // dd($u->email && $u->id !== $user->id);
+            if ($u->email && $u->id !== $user->id) {
+                return redirect()->back()->with('error', 'Email Sudah DiPakai');
+            }
+            $a = User::where('phonenumber', $validatedData['phonenumber'])->first();
+            if ($a->phonenumber && $a->id !== $user->id) {
+                return redirect()->back()->with('error', 'Nomor Hp Sudah DiPakai');
+            }
 
-        if ($validator->fails()) {
-            $errors = $validator->errors();
-            $errorMessages = $errors->all();
-            $errorString = implode(', ', $errorMessages);
-            return back()->with('error',$errorString);
+
+            if (is_null($validatedData['password']) || $validatedData['password'] === '') {
+                $validatedData['password'] = $user->password;
+            } else {
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
+
+            User::find($user->id)->update($validatedData);
+
+            return redirect('/dashboard/profile')->with('success', 'User data has been updated!');
+        } catch (\Throwable $th) {
+            // dd($th);
+            return redirect()->back()->with('error', $th->getMessage());
         }
-        $user = auth()->user()->id;
-        User::find($user)->update([
-            'address' => $request->address,
-            'phonenumber' => $request->phonenumber,
-            'email' => $request->email,
-        ]);
-
-        return redirect('/dashboard/profile')->with('success', 'User data has been updated!');
     }
 
     /**
