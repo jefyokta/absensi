@@ -44,7 +44,7 @@ class AbsensiController extends Controller
         } elseif ($absensi->status === 0) {
             // dd('memek kerja aning jangan bolos');
             return view('dashboard.absensi.hopeurok', ['title' => 'see u next time']);
-        } else if ($absensiIn && $absensi->out !== null) {
+        } else if ($absensi->in && $absensi->out !== null) {
             $title = 'Terimakasih';
 
             return view('dashboard.absensi.complete', compact('title', 'absensi'));
