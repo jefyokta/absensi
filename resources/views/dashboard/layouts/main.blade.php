@@ -10,8 +10,8 @@
     <link rel="shortcut icon" href="/logoabsen.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/okta.css">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js','resources/js/scanner.js
-    '])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/scanner.js'])
+
 
 
     <title>{{ $title }}</title>
