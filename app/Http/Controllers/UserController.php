@@ -11,6 +11,8 @@ use App\Models\SubDivisions;
 use App\Services\QrCodeGen;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -163,5 +165,21 @@ class UserController extends Controller
     {
         User::destroy($user->id);
         return redirect('/dashboard/employees')->with('success', 'User has been deleted!');
+    }
+    public function DownloadCard(Request $request)
+    {
+        $data = $request->input('image');
+        $image = str_replace('data:image/png;base64,', '', $data);
+        $image = str_replace(' ', '+', $image);
+        $imageName = auth()->user()->name . '.png';
+        $path = public_path('cards/' . $imageName);
+
+        File::put($path, base64_decode($image));
+
+        $downloadUrl = '/cards'.'/' . $imageName;
+
+        Storage::disk('public')->delete($path, now()->addMinutes(1));
+
+        return response()->json(['download_url' => $downloadUrl]);
     }
 }

@@ -20,6 +20,11 @@
                     <ul class="py-2" aria-labelledby="dropdownButton">
 
                         <li>
+                            <a href="javascript:void(0)" onclick="convertToImage()"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cetak
+                                Kartu</a>
+                        </li>
+                        <li>
                             <a href="/qrcode?q={{ $user->qrcode }}&download=true" target="_blank"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cetak
                                 Qrcode</a>
@@ -31,16 +36,23 @@
                     </ul>
                 </div>
             </div>
-            <div class="flex flex-col items-center pb-10">
-                <img class="w-24 h-24 mb-3  shadow-lg" src="/qrcode?q={{ $user->qrcode }}" alt="Bonnie image" />
-                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{ $user->name }}</h5>
-                <span
-                    class="text-md font-semibold text-cyan-500 dark:text-gray-400">{{ $user->division->division->name ?? ($user->role ?? '-') }}</span>
-                <span
-                    class="text-sm text-cyan-500 dark:text-gray-400">{{ $user->division->name ?? 'Not In a Division' }}</span>
-                @if ($user->role)
-                    <span class="text-sm text-cyan-500 dark:text-gray-400">{{ $user->role }}</span>
-                @endif
+            <div class="flex flex-col items-center pb-10 ">
+                <div id="card" class="p-10  flex flex-col items-center ">
+                    <img class="w-24 h-24 mb-3  " src="/qrcode?q={{ $user->qrcode }}" alt="Bonnie image" />
+                    <img src="/images/logoabsen.png" alt="" class="h-12 w-12">
+                    <p class="text-xs text-gray-500">GBM's Emplooyee</p>
+                    <h5
+                        class="mb-1 text-xl font-medium  dark:text-white text-blue-800  border-b-2 pb-3 w-full text-center mb-3 border-slate-900 ">
+                        {{ $user->name }}</h5>
+                    <span
+                        class="text-md font-semibold text-cyan-500 dark:text-gray-400 ">{{ $user->division->division->name ?? ($user->role ?? '-') }}</span>
+                    <span
+                        class="text-sm text-cyan-500 dark:text-gray-400">{{ $user->division->name ?? 'Not In a Division' }}</span>
+                    @if ($user->role)
+                        <span class="text-sm text-cyan-500 dark:text-gray-400">{{ $user->role }}</span>
+                    @endif
+                </div>
+
                 <div class="flex mt-4 md:mt-6">
                     <a href="/edit"
                         class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Edit</a>
@@ -49,4 +61,34 @@
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function convertToImage() {
+            const node = document.getElementById('card');
+            html2canvas(node).then(function(canvas) {
+                var dataUrl = canvas.toDataURL('image/png');
+                var link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = '{{ auth()->user()->name }}.png';
+                link.click();
+                // fetch('', {
+                //         method: 'POST',
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                //         },
+                //         body: JSON.stringify({
+                //             image: dataUrl
+                //         })
+                //     })
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         console.log('Success:', data);
+                //     })
+                //     .catch((error) => {
+                //         console.error('Error:', error);
+                //     });
+            });
+        }
+    </script>
 @endsection
