@@ -19,5 +19,5 @@ composer run prepare-absensi
 # Start
 
 ```
-composer run absensi
+php artisan serve
 ```
