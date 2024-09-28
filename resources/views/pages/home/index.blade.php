@@ -1,34 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('pages.layouts.general')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/okta.css">
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <title>Login</title>
-</head>
-
-<body class="bg-body 	" style="">
-    <div class="max-w-md mx-auto glass h-5/6 backdrop-blur-sm p-10 rounded-lg mt-20 z-50">
-
-        @if (auth()->user())
-            <h1 class="text-center font-semibold text-lg">Hai {{ auth()->user()->name }}</h1>
-            <p class="text-center my-5">
-
-                <a href="/dashboard" class="text-blue-500 text-center">Kembali ke dashboard</a>
-            </p>
-        @else
-            <h1 class="text-center font-semibold text-lg">Hai, Login untuk melanjutkan</h1>
-            <p class="text-center my-5">
-                <a href="/dashboard" class="text-blue-500 text-center">Login</a>
-            </p>
-        @endif
-
+@section('content')
+    <div class="flex justify-center items-center w-full h-screen">
+        <div class="flex flex-col jusitify-center items-center">
+            <img src="/images/ll.png" style="width: 400px;height:350px" alt="">
+            <h1 class="text-4xl text-white font-semibold">Sistem Presensi Karyawan</h1>
+            @if (auth()->user())
+                <a href="/dashboard"
+                    class="border p-2.5 rounded-md px-10 text-white hover:bg-white hover:text-slate-900 my-5">
+                    Dashboard
+                </a>
+            @else
+                <a href="/login" class="border p-2.5 rounded-md px-10 text-white hover:bg-white hover:text-slate-900 my-5">
+                    Login
+                </a>
+            @endif
+        </div>
     </div>
-
-</body>
-
-</html>
+@endsection

@@ -30,6 +30,11 @@ Route::get('/', function () {
     return view('pages.home.index');
 });
 
+Route::get('/about', function () {
+    return view('pages.home.about');
+});
+
+
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
@@ -51,13 +56,16 @@ Route::delete('/logout', [LoginController::class, 'logout']);
 Route::get('/qrabsen/masuk', [QrController::class, 'masuk'])->middleware('admin');
 Route::post('/qrabsen', [QrController::class, 'create'])->middleware('admin');
 Route::get('/qrabsen/keluar', [QrController::class, 'keluar'])->middleware('admin');
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('/dashboard', fn() => view("dashboard.dashboard",["title"=>"Dashboard "]))->middleware('auth');
 Route::get('/dashboard/reports', [DashboardController::class, 'reports'])->middleware('admin');
 Route::get('/dashboard/myreports', [DashboardController::class, 'myreports'])->middleware('auth');
 Route::get('/edit', [ProfileController::class, 'edit'])->middleware('auth');
 Route::put('/dashboard/employee', [UserController::class, 'update'])->middleware('admin');
 Route::get('/dashboard/divisions/sub', [DivisionController::class, 'show'])->middleware('admin');
 Route::put('/dashboard/editprofile', [ProfileController::class, 'update'])->middleware('auth');
+
+Route::get('/dashboard/absen', [DashboardController::class, 'index'])->middleware('admin');
+
 Route::resource('/dashboard/absensi', AbsensiController::class)->middleware('auth');
 Route::resource('/dashboard/divisions', DivisionController::class)->middleware('admin');
 Route::resource('/dashboard/profile', ProfileController::class, ['parameters' => ['profile' => 'user',]])->middleware('auth');

@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/okta.css">
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <title>Login</title>
-</head>
-
-<body class="bg-body">
+@extends('pages.layouts.general')
+@section('content')
     @if (session()->has('success'))
         <div id="toast-success"
             class="z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 fixed bottom-5 right-5"
@@ -72,13 +60,13 @@
             <div class="flex flex-col items-center z-50">
                 <img src="/logoabsen.png" alt="" srcset="" class="h-16 brightness-100">
                 <h1 class="h3 mb-5 font-semibold text-4xl text-slate-300 z-50 ">Login</h1>
-                <p class="text-slate-100 mb-10">Absensi PT ABM Teluk Panji</p>
+                <p class="text-slate-100 mb-10">Presensi PT Abdi Budi Mulia Teluk Panji</p>
             </div>
 
             <img src="/images/pp.jpeg" alt=""
                 class="h-full mix-blend-multiply blur-sm brightness-50 absolute top-0 left-0 -z-50">
         </div>
-        <form class="glass p-10 relative" accept="/login" method="POST">
+        <form class="bg-white p-10 relative" accept="/login" method="POST">
 
 
             @csrf
@@ -94,9 +82,17 @@
                 <input type="password" name="password" id="floating_password"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" " required />
+
+
+
                 <label for="floating_password"
                     class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
             </div>
+
+            <button class="text-xs text-blue-700 underline" id="showpw" type="button">
+                Show
+                Password
+            </button>
 
 
 
@@ -106,6 +102,22 @@
         </form>
     </div>
 
-</body>
+    <script>
+        const Show = document.getElementById("showpw");
 
-</html>
+        Show.addEventListener("click",()=>{
+           const password =  document.getElementById("floating_password");
+
+           if (password.type == "password") {
+            password.type = "text"
+
+           }
+           else{
+            password.type = "password"
+
+
+           }
+
+        })
+    </script>
+@endsection

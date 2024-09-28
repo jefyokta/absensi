@@ -21,6 +21,7 @@
 
 
     @include('dashboard.layouts.header')
+    {{-- @include('dashboard.layouts.navbar') --}}
 
     @include('dashboard.layouts.sidebar')
     <div class="p-4 sm:ml-64">

@@ -59,7 +59,9 @@ class AbsensiController extends Controller
      */
     public function create()
     {
-        //
+        $user = User::find(auth()->user()->id);
+        $title = "Absen";
+        return view("dashboard.absensi.index",compact("user",'title'));
     }
 
     /**

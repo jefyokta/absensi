@@ -22,16 +22,17 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        // $q = User::join('divisions', 'users.divisions_id', '=', 'divisions.id')
-        //     ->join('sub_divisions', 'sub_divisions.id', '=', 'users.divisions_id')
-        //     ->select('users.*', 'divisions.name as division_name', 'sub_divisions.name as sub_division_name');
+        $users = User::select('users.*');
 
-
-        // $users = $q->get();
+        $q = $request->query('search');
+        if ($q) {
+            $users->where('name', 'like', '%' . $q . '%');
+        }
+        $users = $users->get();
         return view('dashboard.employee.index', [
             'title' => 'Dashboard | Empolyees',
             'divisions' => SubDivisions::all(),
-            'users' => $users = User::all()
+            'users' => $users
         ]);
     }
 
@@ -124,7 +125,7 @@ class UserController extends Controller
                 'phonenumber' => 'required|max:255',
                 'email' => 'required|email|max:255',
                 'password' => 'nullable|min:5|max:255',
-                'role'=>'nullable'
+                'role' => 'nullable'
 
             ]);
             $user = User::find($validatedData['id']);
@@ -166,5 +167,4 @@ class UserController extends Controller
         User::destroy($user->id);
         return redirect('/dashboard/employees')->with('success', 'User has been deleted!');
     }
-
 }
