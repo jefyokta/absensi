@@ -42,11 +42,17 @@ Route::get('/bukti', [ImageController::class, 'bukti'])->middleware('auth');
 Route::get('/qrcode', [ImageController::class, 'qrcode'])->middleware('auth');
 
 Route::post('/dashboard/print', [DashboardController::class, 'print'])->middleware('admin');
+Route::post('/dashboard/export', [DashboardController::class, 'export'])->middleware('admin');
+
 
 
 Route::put('/dashboard/sub_division', [SubDivisionController::class, 'update'])->middleware('admin');
 Route::get('/dashboard/sub_division', [SubDivisionController::class, 'index'])->middleware('admin');
 Route::get('/dashboard/sub_division/employees', [SubDivisionController::class, 'show'])->middleware('admin');
+Route::get('/dashboard/sub_division/print', [SubDivisionController::class, 'print'])->middleware('admin');
+Route::get('/dashboard/sub_division/export', [SubDivisionController::class, 'export'])->middleware('admin');
+
+
 Route::post('/dashboard/sub_division', [SubDivisionController::class, 'store'])->middleware('admin');
 Route::delete('/dashboard/sub_division', [SubDivisionController::class, 'delete'])->middleware('admin');
 Route::get('/dashboard/sub_division/create', [SubDivisionController::class, 'create'])->middleware('admin');
@@ -56,10 +62,12 @@ Route::delete('/logout', [LoginController::class, 'logout']);
 Route::get('/qrabsen/masuk', [QrController::class, 'masuk'])->middleware('admin');
 Route::post('/qrabsen', [QrController::class, 'create'])->middleware('admin');
 Route::get('/qrabsen/keluar', [QrController::class, 'keluar'])->middleware('admin');
-Route::get('/dashboard', fn() => view("dashboard.dashboard",["title"=>"Dashboard "]))->middleware('auth');
+Route::get('/dashboard', fn() => view("dashboard.dashboard", ["title" => "Dashboard "]))->middleware('auth');
 Route::get('/dashboard/reports', [DashboardController::class, 'reports'])->middleware('admin');
 Route::get('/dashboard/myreports', [DashboardController::class, 'myreports'])->middleware('auth');
 Route::get('/edit', [ProfileController::class, 'edit'])->middleware('auth');
+Route::get('/admin/edit', [ProfileController::class, 'edit'])->middleware('auth');
+
 Route::put('/dashboard/employee', [UserController::class, 'update'])->middleware('admin');
 Route::get('/dashboard/divisions/sub', [DivisionController::class, 'show'])->middleware('admin');
 Route::put('/dashboard/editprofile', [ProfileController::class, 'update'])->middleware('auth');

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EmployeesExport;
 use App\Models\SubDivisions;
 use Illuminate\Http\Request;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Models\Division;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SubDivisionController extends Controller
 {
@@ -95,5 +98,28 @@ class SubDivisionController extends Controller
             'divisions' => SubDivisions::find($id) ?? abort(404),
             'users' => $users = User::where('divisions_id', $id)->get()
         ]);
+    }
+
+
+    public function print(Request $request)
+    {
+        $id = $request->query('sd') ?? abort(404);
+        $users = User::where('divisions_id', $id)->get();
+        $sub = SubDivisions::find($id);
+        $subdivision = $sub->name;
+        $pdf =   Pdf::loadView("dashboard.subdivision.print", compact("users", "subdivision"));
+        return $pdf->download("employees-$subdivision.pdf");
+    }
+
+    public function export(Request $request)
+    {
+        $id = $request->query('sd') ?? abort(404);
+        $users = User::select("name", "nik",  "role", "phonenumber")->where('divisions_id', $id)->get();
+        $sub = SubDivisions::find($id);
+        $subdivision = $sub->name;
+
+        $x = new EmployeesExport($users, "Karyawan di $subdivision");
+
+        return Excel::download($x, $subdivision . ".xlsx");
     }
 }

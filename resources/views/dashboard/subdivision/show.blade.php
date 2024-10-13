@@ -4,6 +4,13 @@
     <div
         class="glass rounded-lg p-5 max-h-content flex justify-between items-center flex-wrap flex-md-nowrap  pt-3 pb-2 mb-3 border-bottom">
         <h1 class="font-semibold p-2 text-xl">Data Karyawan {{ $divisions->name }}</h1>
+        <div>
+            <a href="/dashboard/sub_division/export?sd={{ $divisions->id }}"
+                class="px-3 py-1 rounded-md text-white bg-green-500">Export</a>
+            <a href="/dashboard/sub_division/print?sd={{ $divisions->id }}"
+                class="px-3 py-1 rounded-md text-white bg-blue-500">Cetak</a>
+        </div>
+
     </div>
 
     <div class="row">
@@ -65,7 +72,6 @@
                                     </div>
                                 @else
                                     <td class="px-6 py-4">{{ $user->name }}</td>
-
                             @endif
                             <td class="px-6 py-4 ">{{ $user->role ?? '-' }}</td>
 

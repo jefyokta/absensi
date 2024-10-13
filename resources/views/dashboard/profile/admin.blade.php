@@ -38,16 +38,13 @@
             </div>
             <div class="flex flex-col items-center pb-10 ">
                 <div id="card" class="p-10  flex flex-col items-center ">
-                    <img class="w-24 h-24 mb-3  " src="/qrcode?q={{ $user->qrcode }}" alt="Bonnie image" />
                     <img src="/images/logoabsen.png" alt="" class="h-12 w-12">
-                    <p class="text-xs text-gray-500">ABM's Emplooyee</p>
+                    <p class="text-xs text-gray-500">ABM's Admin </p>
                     <h5
                         class="mb-1 text-xl font-medium  dark:text-white text-blue-800  border-b-2 pb-3 w-full text-center mb-3 border-slate-900 ">
                         {{ $user->name }}</h5>
-                    <span
-                        class="text-md font-semibold text-cyan-500 dark:text-gray-400 ">{{ $user->division->division->name ?? ($user->role ?? '-') }}</span>
-                    <span
-                        class="text-sm text-cyan-500 dark:text-gray-400">{{ $user->division->name ?? 'Not In a Division' }}</span>
+                    <span class="text-md font-semibold text-cyan-500 dark:text-gray-400 ">{{ $user->email }}</span>
+                    <span class="text-sm text-cyan-500 dark:text-gray-400">{{ 'Admin' }}</span>
                     @if ($user->role)
                         <span class="text-sm text-cyan-500 dark:text-gray-400">{{ $user->role }}</span>
                     @endif
@@ -62,33 +59,4 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
-        function convertToImage() {
-            const node = document.getElementById('card');
-            html2canvas(node).then(function(canvas) {
-                var dataUrl = canvas.toDataURL('image/png');
-                var link = document.createElement('a');
-                link.href = dataUrl;
-                link.download = '{{ auth()->user()->name }}.png';
-                link.click();
-                // fetch('', {
-                //         method: 'POST',
-                //         headers: {
-                //             'Content-Type': 'application/json',
-                //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                //         },
-                //         body: JSON.stringify({
-                //             image: dataUrl
-                //         })
-                //     })
-                //     .then(response => response.json())
-                //     .then(data => {
-                //         console.log('Success:', data);
-                //     })
-                //     .catch((error) => {
-                //         console.error('Error:', error);
-                //     });
-            });
-        }
-    </script>
 @endsection

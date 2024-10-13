@@ -30,6 +30,7 @@ class UserFactory extends Factory
             'divisions_id' => SubDivisions::all()->random()->id,
             'address' => fake('id_ID')->address(),
             'phonenumber' => fake('id_ID')->phoneNumber(),
+            'nik' => $this->faker->unique()->regexify('[1-9]{2}[0-9]{4}[0-4][0-9][0-1][0-9][7-9][0-9][0-9]{4}'),
             'email' => $email,
             'email_verified_at' => now(),
             'qrcode' => QrCodeGen::generate(),

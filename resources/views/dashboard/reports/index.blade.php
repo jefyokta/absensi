@@ -2,7 +2,7 @@
 
 @section('container')
     @php
-    // dd(request('start'));
+        // dd(request('start'));
         use App\Services\DateID;
         $end = false;
         $start = false;
@@ -22,18 +22,26 @@
         <div>
 
             <h1 class="font-semibold text-xl">Laporan </h1>
+
             <span class="text-xs">
                 {{ $end && $start ? $start[0] . ' ' . DateID::getmonth($start[1]) . ' ' . $end[2] . ' sampai ' . $end[0] . ' ' . DateID::getmonth($end[1]) . ' ' . $end[2] : '' }}
             </span>
         </div>
         <div class="flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-            <form action="/dashboard/print" method="post">
+
+            <form action="/dashboard/print" method="post" id="mainForm">
                 @csrf
-                @if (!empty(request('start') && !empty(request('end'))))
-                    <input type="hidden" name="start" value="{{ request('start') }}">
-                    <input type="hidden" name="end" value="{{ request('end') }}">
-                @endif
-                <button type="submit" data-tooltip-target="tooltip-bottom" data-tooltip-placement="left"
+                <select id="date" name="date"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  p-2.5 ">
+                    @foreach ($months as $m)
+                        <option value="{{ $m['month'] . '/' . $m['year'] }}">
+                            {{ Carbon\Carbon::create()->month($m['month'])->translatedFormat('F') .'/' .$m['year'] }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="button" onclick="submitForm('/dashboard/export')"
+                    class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mx-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Export</button>
+                <button type="button" onclick="submitForm('/dashboard/print')"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Cetak
                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -42,12 +50,14 @@
                             d="M1 5h12m0 0L9 1m4 4L9 9" />
                     </svg>
                 </button>
-                <div id="tooltip-bottom" role="tooltip"
-                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                    Max 50 data
-                    <div class="tooltip-arrow" data-popper-arrow></div>
-                </div>
             </form>
+            <script>
+                      function submitForm(action) {
+                const form = document.getElementById('mainForm');
+                form.action = action;
+                form.submit();
+            }
+            </script>
 
         </div>
     </div>
@@ -67,9 +77,9 @@
                     </div>
                     <input id="datepicker-range-start" name="start" type="text"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Select date start" autocomplete="off" datepicker-format="dd/mm/yy">
+                        placeholder="Dari" autocomplete="off" datepicker-format="dd/mm/yy">
                 </div>
-                <span class="mx-4 text-gray-500">to</span>
+                <span class="mx-4 text-gray-500">></span>
                 <div class="relative">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -80,13 +90,13 @@
                     </div>
                     <input id="datepicker-range-end" name="end" type="text"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Select date end" datepicker-format="dd/mm/yyy" autocomplete="off">
+                        placeholder="Sampai" datepicker-format="dd/mm/yyy" autocomplete="off">
                 </div>
 
             </div>
             <div class="my-5 flex">
                 <button type="submit"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Apply</button>
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Terapkan</button>
                 <button type="submit"
                     class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"><a
                         href="/dashboard/reports">Reset</a></button>

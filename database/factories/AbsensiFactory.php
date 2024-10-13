@@ -23,7 +23,7 @@ class AbsensiFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
-            'date' => Carbon::now()->format('d/m/Y'),
+            'date' => "1/10/2024",
             'in' => fake()->date('H:i'),
             'out' => fake()->date('H:i'),
             'status' => rand(0,1)

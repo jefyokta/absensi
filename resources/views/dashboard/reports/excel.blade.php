@@ -45,14 +45,6 @@
 </head>
 
 <body>
-    @php
-        $path = storage_path('app/cop.jpeg');
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-    @endphp
-
-    <img src="{{ $base64 }}" alt="" style="width: 60%;margin-bottom: 50px;z-index:-1;">
     <h2>Laporan Absensi Bulanan</h2>
     <p style="text-align: center;">Bulan: {{ $month }} - Tahun: {{ $year }}</p>
 
@@ -95,7 +87,6 @@
 
 
     </table>
-    @include('dashboard.reports.footer')
 </body>
 
 </html>

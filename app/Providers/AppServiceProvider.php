@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
             return $user->is_admin;
         });
         Paginator::useTailwind();
+
+        if (config('app.env')==="ngrok") {
+            URL::forceScheme("https");
+         }
 
     }
 }

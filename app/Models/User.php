@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -48,5 +49,9 @@ class User extends Authenticatable
     public function division()
     {
         return $this->belongsTo(SubDivisions::class, 'divisions_id');
+    }
+
+    public function absensis():HasMany{
+        return $this->hasMany(Absensi::class);
     }
 }

@@ -17,6 +17,14 @@ class ProfileController extends Controller
     {
         $user_id = auth()->user()->id;
 
+        if (auth()->user()->is_admin) {
+            return view('dashboard.profile.admin', [
+                "title" => "Dashboard | Profile",
+                'active' => 'dashboard',
+                'user' => User::find($user_id)
+            ]);
+        }
+
         return view('dashboard.profile.index', [
             "title" => "Dashboard | Profile",
             'active' => 'dashboard',
@@ -54,10 +62,17 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = User::find(auth()->user()->id);
-        return view('dashboard.profile.edit', [
-            "title" => "Dashboard | Profile Edit",
-            'user' => $user
-        ]);
+        if ($user->is_admin) {
+            return view('dashboard.profile.adminEdit', [
+                "title" => "Dashboard | Profile Edit",
+                'user' => $user
+            ]);
+        } else {
+            return view('dashboard.profile.adminEdit', [
+                "title" => "Dashboard | Profile Edit",
+                'user' => $user
+            ]);
+        }
     }
 
     /**
@@ -70,6 +85,7 @@ class ProfileController extends Controller
                 'id' => "required",
                 'name' => 'required|max:255',
                 'address' => 'required',
+                'role' => 'required',
                 'phonenumber' => 'required|max:255',
                 'email' => 'required|email|max:255',
                 'password' => 'nullable|min:5|max:255',

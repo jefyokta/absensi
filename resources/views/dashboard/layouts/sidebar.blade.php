@@ -28,8 +28,19 @@
     <div class="h-5/6 rounded-lg m-2.5 px-3 py-5 overflow-y-auto glass">
         <a href="/dashboard" class="flex items-center ps-2.5 mb-5">
             <img src="/images/logoabsen.png" class="h-8 me-1 " alt="logo" />
-            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Absen</span>
+            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Presensi</span>
         </a>
+        <div class="m-5 mx-2.5 glass p-2.5 rounded-md">
+
+            <a href="/dashboard/profile" class="font-semibold text-md block">{{ "@".auth()->user()->name }}</a>
+            @if (auth()->user()->is_admin)
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">Admin</span>
+            @else
+            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Karyawan</span>
+
+            @endif
+        </div>
+
         <ul class="space-y-2 font-medium">
             <li>
                 <a href="/dashboard"
@@ -115,7 +126,7 @@
                             <path
                                 d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
                         </svg>
-                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">QrAbsen</span>
+                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">QrPresensi</span>
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Absensi;
 use App\Models\Division;
+use App\Services\QrCodeGen;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -139,33 +140,27 @@ class DatabaseSeeder extends Seeder
 
 
         DB::table('users')->insert([
-            [
-                'name' => 'Administrator',
-                'address' => fake('id_ID')->address(),
-                'phonenumber' => fake('id_ID')->phoneNumber(),
-                'email' => 'admin@gmail.com',
-                'qrcode' => 'admin@gmail.com',
 
-                'password' => bcrypt('admin'),
-                'is_admin' => '1'
-            ],
             [
                 'name' => 'SaumiShintia',
                 'address' => fake('id_ID')->address(),
                 'phonenumber' => fake('id_ID')->phoneNumber(),
                 'email' => 'Sintia@gmail.com',
-                'qrcode' => 'Sintia@gmail.com',
+                'qrcode' => QrCodeGen::generate(),
                 'password' => bcrypt('sintia123'),
-                'is_admin' => true
+                'is_admin' => true,
+                "nik" => "1234567890"
             ],
             [
                 'name' => 'Jepi Okta',
                 'address' => fake('id_ID')->address(),
                 'phonenumber' => fake('id_ID')->phoneNumber(),
                 'email' => 'jefyokta50@gmail.com',
-                'qrcode' => 'jefyokta50@gmail.com',
+                'qrcode' => QrCodeGen::generate(),
                 'password' => bcrypt('jepiokta'),
-                'is_admin' => true
+                'is_admin' => true,
+                "nik" => "1234567891"
+
             ]
         ]);
 
