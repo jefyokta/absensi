@@ -20,13 +20,15 @@ class AbsensiExport implements FromView, WithTitle, WithStyles, WithEvents
     protected $dates;
     protected $month;
     protected $year;
+    protected $subdivision;
 
-    public function __construct($employees, $dates, $month, $year)
+    public function __construct($employees, $dates, $month, $year,$subdivision)
     {
         $this->employees = $employees;
         $this->dates = $dates;
         $this->month = $month;
         $this->year = $year;
+        $this->subdivision = $subdivision;
     }
 
     public function view(): View
@@ -36,6 +38,8 @@ class AbsensiExport implements FromView, WithTitle, WithStyles, WithEvents
             'dates' => $this->dates,
             'month' => $this->month,
             'year' => $this->year,
+            'subdivision' => $this->subdivision,
+
         ]);
     }
 

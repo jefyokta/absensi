@@ -45,8 +45,13 @@
 </head>
 
 <body>
-    <h2>Laporan Absensi Bulanan</h2>
-    <p style="text-align: center;">Bulan: {{ $month }} - Tahun: {{ $year }}</p>
+    <h2>Laporan Absensi Bulanan @if ($subdivision)
+            {{ $subdivision->name }}
+        @endif
+    </h2>
+    <p style="text-align: center;">{{ Carbon\Carbon::create()->month($month)->translatedFormat('F') }}
+        {{ $year }}</p>
+
 
     <table>
         <thead>

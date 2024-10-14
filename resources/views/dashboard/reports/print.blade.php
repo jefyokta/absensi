@@ -54,7 +54,11 @@
 
     <img src="{{ $base64 }}" alt="" style="width: 60%;margin-bottom: 50px;z-index:-1;">
     <h2>Laporan Absensi Bulanan</h2>
-    <p style="text-align: center;">Bulan: {{ $month }} - Tahun: {{ $year }}</p>
+    <p style="text-align: center;">{{  Carbon\Carbon::create()->month($month)->translatedFormat('F') }} {{ $year }}</p>
+
+    @if ($subdivision)
+        <p style="text-align: center;">{{ $subdivision->name }}</p>
+    @endif
 
     <table>
         <thead>

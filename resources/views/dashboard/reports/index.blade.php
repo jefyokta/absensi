@@ -31,6 +31,13 @@
 
             <form action="/dashboard/print" method="post" id="mainForm">
                 @csrf
+                <select id="subdivision" name="date"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  p-2.5 ">
+                    @foreach ($subdivision as $m)
+                        <option value="{{ $m['id'] }}">
+                            {{ $m['name'] }} </option>
+                    @endforeach
+                </select>
                 <select id="date" name="date"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  p-2.5 ">
                     @foreach ($months as $m)
@@ -52,11 +59,11 @@
                 </button>
             </form>
             <script>
-                      function submitForm(action) {
-                const form = document.getElementById('mainForm');
-                form.action = action;
-                form.submit();
-            }
+                function submitForm(action) {
+                    const form = document.getElementById('mainForm');
+                    form.action = action;
+                    form.submit();
+                }
             </script>
 
         </div>

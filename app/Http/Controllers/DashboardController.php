@@ -6,6 +6,7 @@ use App\Exports\AbsensiExport;
 use App\Models\Absensi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\SubDivisions;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -43,11 +44,14 @@ class DashboardController extends Controller
         $absen = $absen->paginate(50);
         $absen->appends($req->all());
 
+        $subdivision = SubDivisions::all();
+
         return view('dashboard.reports.index', [
             "title" => "Dashboard | Reports",
             'active' => 'dashboard',
             'absensis' => $absen,
-            "months" => $absensiDates
+            "months" => $absensiDates,
+            "subdivision" => $subdivision
         ]);
     }
 
@@ -60,13 +64,15 @@ class DashboardController extends Controller
     public function print(Request $request)
     {
         $date = $request->input('date', date('m/Y'));
+        $sub = $request->input("subdivision", 1);
+
         [$month, $year] = explode('/', $date);
 
         $employees = User::with(['absensis' => function ($query) use ($month, $year) {
             $query->whereMonth('created_at', $month)
                 ->whereYear('created_at', $year);
-        }])->get();
-
+        }])->where('divisions_id', $sub)->get();
+        $subdivision = SubDivisions::find($sub);
         $dates = collect();
         $daysInMonth = Carbon::createFromDate($year, $month)->daysInMonth;
 
@@ -76,10 +82,7 @@ class DashboardController extends Controller
                 $dates->push($carbonDate);
             }
         }
-
-        // return view('dashboard.reports.print', compact('employees', 'dates', 'month', 'year'));
-
-        $pdf =  Pdf::loadView('dashboard.reports.print', compact('employees', 'dates', 'month', 'year'))->setPaper("a4", 'landscape');
+        $pdf =  Pdf::loadView('dashboard.reports.print', compact('employees', 'dates', 'month', 'year', "subdivision"))->setPaper("a4", 'landscape');
 
         return $pdf->download();
     }
@@ -87,6 +90,8 @@ class DashboardController extends Controller
     public function export(Request $request)
     {
         $date = $request->input('date', date('m/Y'));
+        $sub = $request->input("subdivision", 1);
+
         [$month, $year] = explode('/', $date);
 
         $dates = collect();
@@ -101,9 +106,10 @@ class DashboardController extends Controller
 
         $employees = User::with(['absensis' => function ($query) use ($month, $year) {
             $query->whereMonth('created_at', $month)
-                  ->whereYear('created_at', $year);
-        }])->get();
+                ->whereYear('created_at', $year);
+        }])->where('divisions_id', $sub)->get();
+        $subdivision = SubDivisions::find($sub);
 
-        return Excel::download(new AbsensiExport($employees, $dates, $month, $year), "Laporan_Absensi_{$month}_{$year}.xlsx");
+        return Excel::download(new AbsensiExport($employees, $dates, $month, $year, $subdivision), "Laporan_Absensi_{$month}_{$year}.xlsx");
     }
 }
