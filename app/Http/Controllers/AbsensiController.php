@@ -7,8 +7,9 @@ use App\Models\Absensi;
 use App\Models\Division;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use PhpParser\Node\Stmt\TryCatch;
+
+
+use function PHPUnit\Framework\isNull;
 
 class AbsensiController extends Controller
 {
@@ -19,12 +20,16 @@ class AbsensiController extends Controller
     {
 
         $user_id = auth()->user()->id;
-        if (auth()->user()->is_admin) abort(404);
-        $absensi = Absensi::where('user_id', $user_id)->where('date', '=', date('d/m/Y'))->first();
-        if (!$absensi) return view('dashboard.absensi.notyet', ['title' => 'Jangan Lupa Absen']);
+
+
+        $absensi = Absensi::where('user_id', $user_id)->where('date',  date('d/m/Y'))->first();
+
+        if (!$absensi) view('dashboard.absensi.notyet', ['title' => 'Jangan Lupa Absen']);
+
         $absensiIn = $absensi->in ?? false;
         $absensiOut = $absensi->out ?? false;
-        if (is_null($absensi->status)) {
+
+        if (!$absensi) {
             return view('dashboard.absensi.index', [
                 "title" => "Dashboard | Absensi In",
                 'active' => 'dashboard',
@@ -35,23 +40,23 @@ class AbsensiController extends Controller
                 'divisions' => Division::all()
             ]);
         }
-        if ($absensiIn && !$absensi->status === 0 && $absensiOut) {
-            // dd($absensi);
-            // $absensi = $absensiIn;
+        if ($absensiIn && !$absensi->status == 0 && isNull($absensi->out)) {
+
             $title = 'Semangat!';
 
             return view('dashboard.absensi.working', compact('title', 'absensi'));
         } elseif ($absensi->status === 0) {
-            // dd('memek kerja aning jangan bolos');
             return view('dashboard.absensi.hopeurok', ['title' => 'see u next time']);
         } else if ($absensi->in && $absensi->out !== null) {
             $title = 'Terimakasih';
 
             return view('dashboard.absensi.complete', compact('title', 'absensi'));
+        } else {
+
+            $absensiOut = Absensi::where('user_id', $user_id)->where('date', '=', date('d/m/Y'))->first()->out ?? '';
+            $title = 'absensi';
+            return view('dashboard.absensi.notyet', compact('title', 'absensi'));
         }
-        $absensiOut = Absensi::where('user_id', $user_id)->where('date', '=', date('d/m/Y'))->first()->out ?? '';
-        $title = 'absensi';
-        return view('dashboard.absensi.notyet', compact('title', 'absensi'));
     }
 
     /**
@@ -59,9 +64,18 @@ class AbsensiController extends Controller
      */
     public function create()
     {
+        $user = User::with(['absensis' => function ($query) {
+
+            $query->where('date', date('d/m/Y'));
+        }])->where('id', auth()->user()->id)->first();
+
+        if ($user && $user->absensis->isNotEmpty()) {
+            return back()->with('error', 'Kamu sudah absen/presensi hari ini');
+        }
+
         $user = User::find(auth()->user()->id);
         $title = "Absen";
-        return view("dashboard.absensi.index",compact("user",'title'));
+        return view("dashboard.absensi.index", compact("user", 'title'));
     }
 
     /**
@@ -70,10 +84,20 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
 
+
+        $user = User::with(['absensis' => function ($query) {
+
+            $query->where('date', date('d/m/Y'));
+        }])->where('id', auth()->user()->id)->first();
+
+        if ($user && $user->absensis->isNotEmpty()) {
+            return back()->with('error', 'Kamu sudah absen/presensi hari ini');
+        }
+
         try {
             $validatedData = $request->validate([
                 'why' => 'required',
-                'image' => 'image|file|max:1024|nullable',
+                'image' => 'image|file|nullable',
                 'reason' => 'nullable'
             ]);
 
@@ -87,7 +111,9 @@ class AbsensiController extends Controller
             $validatedData['user_id'] = auth()->user()->id;
             $absensi = Absensi::create($validatedData);
         } catch (\Throwable $th) {
-            dd($th);
+
+            return back()->with('error', $th->getMessage());
+            // dd($th);
         }
 
         return redirect('/dashboard/absensi/')->with('success', 'Terima Kasih Sudah Mengabarkan!');
@@ -101,12 +127,16 @@ class AbsensiController extends Controller
     {
         $absensi = Absensi::find($id);
         if (!$absensi) return abort(404);
-        if ($absensi->user->id == auth()->user()->id || auth()->user()->is_admin) {
-            return view('dashboard.absensi.show', [
-                "title" => "Dashboard | Absensi",
-                'active' => 'dashboard',
-                'absensi' => $absensi,
-            ]);
+
+        if (auth()->user()->divisions_id === $absensi->user->divisions_id) {
+            if ($absensi->user->id == auth()->user()->id || auth()->user()->is_admin) {
+                return view('dashboard.absensi.show', [
+                    "title" => "Dashboard | Absensi",
+                    'active' => 'dashboard',
+                    'absensi' => $absensi,
+                ]);
+            }
+            return abort(401);
         }
         return abort(401);
     }
@@ -141,6 +171,4 @@ class AbsensiController extends Controller
     {
         //
     }
-
-   
 }

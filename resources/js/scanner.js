@@ -11,30 +11,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("form").submit();
             }, 200);
         }
-
+   
         function onScanError(errorMessage) {
             // console.error(`Scan error: ${errorMessage}`);
         }
 
-        const html5QrCode = new Html5Qrcode("reader");
-
-        html5QrCode
-            .start(
-                { facingMode: "environment" },
-                {
-                    fps: 10,
-                    qrbox: { width: 200, height: 200 },
-                },
-                onScanSuccess,
-                onScanError
-            )
-            .catch((err) => {
-                console.error(`Unable to start QR code scanner: ${err}`);
-            });
-    }, 500);
+        const html5QrCode = new Html5Qrcode("reader") || false;
+        if (document.getElementById("reader") && html5QrCode) {
+            html5QrCode
+                .start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: { width: 200, height: 200 },
+                    },
+                    onScanSuccess,
+                    onScanError
+                )
+                .catch((err) => {
+                    console.error(`Unable to start QR code scanner: ${err}`);
+                });
+        }
+    }, 100);
 });
-
-
-
-
-

@@ -31,13 +31,20 @@
 
             <form action="/dashboard/print" method="post" id="mainForm">
                 @csrf
-                <select id="subdivision" name="date"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  p-2.5 ">
-                    @foreach ($subdivision as $m)
-                        <option value="{{ $m['id'] }}">
-                            {{ $m['name'] }} </option>
-                    @endforeach
-                </select>
+                @if (auth()->user()->is_superadmin || !auth()->user()->divisions_id)
+                    <select id="subdivision" name="subdivision"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  p-2.5 ">
+                        @foreach ($subdivision as $m)
+                            <option value="{{ $m['id'] }}">
+                                {{ $m['name'] }} </option>
+                        @endforeach
+                    </select>
+                @else
+                    <input type="hidden" name="subdivision">
+                    <span class="mx-1">
+                        {{ auth()->user()->division->name }}
+                    </span>
+                @endif
                 <select id="date" name="date"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  p-2.5 ">
                     @foreach ($months as $m)
@@ -129,21 +136,41 @@
         </thead>
         <tbody class="glass rounded-es-lg">
             @foreach ($absensis as $absensi)
-                <tr class="dark:bg-gray-800 rounded-lg">
-                    <td class="px-6 py-4 ">{{ $absensi->id }}</td>
-                    <td class="px-6 py-4 ">{{ $absensi->user->name }}</td>
-                    <td class="px-6 py-4 ">
-                        @if ($absensi->user->division)
-                            {{ $absensi->user->division->name }}
-                        @else
-                            <p class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> -</p>
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 ">{{ $absensi->date }}</td>
-                    <td class="px-6 py-4 ">{{ $absensi->in }}</td>
-                    <td class="px-6 py-4 ">{{ $absensi->out ?? '-' }}</td>
-                    <td class="px-6 py-4 ">{{ $absensi->status ? 'hadir' : 'tidak hadir' }}</td>
-                </tr>
+                @if (auth()->user()->division)
+                    @if ($absensi->user->divisions_id === auth()->user()->divisions_id)
+                        <tr class="dark:bg-gray-800 rounded-lg">
+                            <td class="px-6 py-4 ">{{ $absensi->id }}</td>
+                            <td class="px-6 py-4 ">{{ $absensi->user->name }}</td>
+                            <td class="px-6 py-4 ">
+                                @if ($absensi->user->division)
+                                    {{ $absensi->user->division->name }}
+                                @else
+                                    <p class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> -</p>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 ">{{ $absensi->date }}</td>
+                            <td class="px-6 py-4 ">{{ $absensi->in }}</td>
+                            <td class="px-6 py-4 ">{{ $absensi->out ?? '-' }}</td>
+                            <td class="px-6 py-4 ">{{ $absensi->status ? 'hadir' : 'tidak hadir' }}</td>
+                        </tr>
+                    @endif
+                @else
+                    <tr class="dark:bg-gray-800 rounded-lg">
+                        <td class="px-6 py-4 ">{{ $absensi->id }}</td>
+                        <td class="px-6 py-4 ">{{ $absensi->user->name }}</td>
+                        <td class="px-6 py-4 ">
+                            @if ($absensi->user->division)
+                                {{ $absensi->user->division->name }}
+                            @else
+                                <p class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> -</p>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 ">{{ $absensi->date }}</td>
+                        <td class="px-6 py-4 ">{{ $absensi->in }}</td>
+                        <td class="px-6 py-4 ">{{ $absensi->out ?? '-' }}</td>
+                        <td class="px-6 py-4 ">{{ $absensi->status ? 'hadir' : 'tidak hadir' }}</td>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
     </table>

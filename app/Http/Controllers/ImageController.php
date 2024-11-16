@@ -28,7 +28,7 @@ class ImageController extends Controller
 
         $user = User::where('qrcode', $filename,)->first();
 
-        if ($user->id == auth()->user()->id || auth()->user()->is_admin) {
+        if ($user->id == auth()->user()->id || auth()->user()->is_admin || auth()->user()->is_superadmin) {
             $path = storage_path('app/qrcodes/' . $filename);
             if (!file_exists($path)) {
               return  abort(404);

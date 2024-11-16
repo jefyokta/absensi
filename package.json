@@ -16,6 +16,8 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "html5-qrcode": "^2.3.8"
+        "apexcharts": "^3.54.1",
+        "html5-qrcode": "^2.3.8",
+        "simple-datatables": "^9.2.1"
     }
 }

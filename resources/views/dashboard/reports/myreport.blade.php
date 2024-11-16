@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 @section('container')
 <div class="my-3">
-    <h1 class="text-slate-700 font-bold text-3xl text-center my-10">Absen {{ auth()->user()->name }}</h1>
+    <h1 class="text-slate-700 font-bold text-3xl text-center my-10">Presensi {{ auth()->user()->name }}</h1>
 </div>
 <div class="">
     <div class="col-6">

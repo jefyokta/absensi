@@ -122,4 +122,16 @@ class SubDivisionController extends Controller
 
         return Excel::download($x, $subdivision . ".xlsx");
     }
+
+    public function mydivision()
+    {
+        $id = auth()->user()->id;
+
+        $user = User::find($id);
+        $title = $user->division->name;
+        $users = User::where("divisions_id", auth()->user()->divisions_id)->get();
+        $divisions = $user->division;
+
+        return view("dashboard.subdivision.show", compact("users", "divisions", "title"));
+    }
 }

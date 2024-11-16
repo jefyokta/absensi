@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('nik')->unique();
             $table->string('address');
             $table->string('qrcode')->unique();
+            $table->integer("is_admin")->nullable();
+            $table->boolean("is_superadmin")->nullable();
             $table->string('phonenumber');
             $table->string('role')->nullable();
             $table->string('email')->unique();

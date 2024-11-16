@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
     {
 
 
+
+
         DB::table('sub_divisions')->insert([
             "name" => "Staf Kantor dan Gudang",
         ]);
@@ -167,5 +169,6 @@ class DatabaseSeeder extends Seeder
         User::factory(20)->create();
 
         Absensi::factory(10)->create();
+        $this->call(UserSeeder::class);
     }
 }

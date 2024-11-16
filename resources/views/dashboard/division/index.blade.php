@@ -1,11 +1,17 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
+    @php
+        $path = 'dashboard';
+        if (auth()->user()->is_superadmin) {
+            $path = 'super';
+        }
+    @endphp
     <div
         class="glass rounded-lg p-5 max-h-content flex justify-between items-center flex-wrap flex-md-nowrap  pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="font-semibold p-2 text-xl">Divisi</h1>
+        <h1 class="font-semibold p-2 text-xl">Data Jabatan</h1>
         <div class="flex justify-between rounded-lg p-1.5 bg-blue-500  ">
-            <a href="/dashboard/divisions/create" class="text-white text-s">Tambah Data</a>
+            <a href="/{{ $path }}/divisions/create" class="text-white text-s">Tambah Data</a>
         </div>
     </div>
 
@@ -20,7 +26,7 @@
                                 <th scope="col" class="px-6 py-3 rounded-ss-lg">
                                     ID</th>
                                 <th scope="col" class="px-6 py-3 ">
-                                    NAMA DIVISI</th>
+                                    NAMA</th>
                                 <th scope="col" class="px-6 py-3 rounded-se-lg">
                                     AKSI</th>
                             </tr>
@@ -32,7 +38,8 @@
                                     <td class="px-6 py-4 ">{{ $division->id }}</th>
                                     <td class="px-6 py-4 ">{{ $division->name }}</td>
                                     <td class="px-6 py-4 flex  align-center">
-                                        <a href="/dashboard/divisions/sub?d={{ $division->id }}" class="badge border-0">
+                                        <a href="{{ auth()->user()->is_superadmin ? "/super/divisions/sub?d=$division->id" : "/dashboard/divisions/sub?d= $division->id " }}"
+                                            class="badge border-0">
                                             <svg class="w-6 h-6 text-blue-800 dark:text-white" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -45,10 +52,10 @@
 
                                         </a>
 
-                                        <a href="/dashboard/divisions/{{ $division->id }}/edit" class="badge border-0"><svg
-                                                class="w-6 h-6 text-green-800 dark:text-white" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                fill="currentColor" viewBox="0 0 24 24">
+                                        <a href="/{{ auth()->user()->is_superadmin ? 'super' : 'dashboard' }}/divisions/{{ $division->id }}/edit "
+                                            class="badge border-0"><svg class="w-6 h-6 text-green-800 dark:text-white"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" fill="currentColor" viewBox="0 0 24 24">
                                                 <path fill-rule="evenodd"
                                                     d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z"
                                                     clip-rule="evenodd" />
@@ -100,8 +107,9 @@
                     </svg>
                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Hapus Divisi Ini?</h3>
                     <div class="flex justify-center w-full">
-                        <form action="/dashboard/divisions/{{ $division->id }}" method="POST" class="d-inline"
-                            id="delete">
+                        <form
+                            action="/{{ auth()->user()->is_superadmin ? 'super' : 'dashboard' }}/divisions/{{ $division->id }}"
+                            method="POST" class="d-inline" id="delete">
                             @method('delete')
                             @csrf
 
@@ -121,7 +129,8 @@
     <script>
         const setId = (id) => {
             const deleteForm = document.getElementById('delete');
-            deleteForm.setAttribute('action', '/dashboard/divisions/' + id);
+            deleteForm.setAttribute('action', "/" + "{{ auth()->user()->is_superadmin ? 'super' : 'dashboard' }}" +
+                '/divisions/' + id);
         }
     </script>
 @endsection

@@ -15,7 +15,7 @@ class DivisionController extends Controller
      */
     public function index()
     {
-        return view ('dashboard.division.index', [
+        return view('dashboard.division.index', [
             'title' => 'Dashboard | Add Divisions',
             'divisions' => Division::all(),
             'user' => User::all()
@@ -27,7 +27,7 @@ class DivisionController extends Controller
      */
     public function create()
     {
-        return view ('dashboard.division.create', [
+        return view('dashboard.division.create', [
             'title' => 'Dashboard | Add Divisions',
             'divisions' => Division::all()
         ]);
@@ -54,10 +54,9 @@ class DivisionController extends Controller
 
         $id = $request->query('d') ?? abort(404);
         return view('dashboard.division.show', [
-            'sub_divisions' => SubDivisions::select('*')->where('division_id','=',$id)->get(),
+            'sub_divisions' => SubDivisions::select('*')->where('division_id', '=', $id)->get(),
             'title' => Division::find($id)->name
         ]);
-
     }
 
     /**
@@ -65,7 +64,7 @@ class DivisionController extends Controller
      */
     public function edit(Division $division)
     {
-        return view ('dashboard.division.edit', [
+        return view('dashboard.division.edit', [
             'title' => 'Dashboard | Edit Divisions',
             'division' => $division,
         ]);

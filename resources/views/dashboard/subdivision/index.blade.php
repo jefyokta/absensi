@@ -1,11 +1,17 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
+    @php
+        $path = 'dashboard';
+        if (auth()->user()->is_superadmin) {
+            $path = 'super';
+        }
+    @endphp
     <div
         class="glass rounded-lg p-5 max-h-content flex justify-between items-center flex-wrap flex-md-nowrap  pt-3 pb-2 mb-3 border-bottom">
         <h1 class="font-semibold p-2 text-xl">Divisi</h1>
         <div class="flex justify-between rounded-lg p-1.5 bg-blue-500  ">
-            <a href="/dashboard/sub_division/create" class="text-white text-s">Tambah Data</a>
+            <a href="/{{ $path }}/sub_division/create" class="text-white text-s">Tambah Data</a>
         </div>
     </div>
 
@@ -25,6 +31,7 @@
                                     AKSI</th>
                             </tr>
                         </thead>
+
                         <tbody class="glass rounded-es-lg">
                             @foreach ($sub_divisions as $sub_division)
                                 <tr class="dark:bg-gray-800 rounded-lg">
@@ -32,7 +39,8 @@
                                     <td class="px-6 py-4 ">{{ $sub_division->id }}</th>
                                     <td class="px-6 py-4 ">{{ $sub_division->name }}</td>
                                     <td class="px-6 py-4 flex  align-center">
-                                        <a href="/dashboard/sub_division/employees?sd={{ $sub_division->id }}" class="badge border-0">
+                                        <a href="/{{ $path }}/sub_division/employees?sd={{ $sub_division->id }}"
+                                            class="badge border-0">
                                             <svg class="w-6 h-6 text-blue-800 dark:text-white" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
@@ -45,7 +53,7 @@
 
                                         </a>
 
-                                        <a href="/dashboard/sub_division/edit?id={{ $sub_division->id }}"
+                                        <a href="/{{ $path }}/sub_division/edit?id={{ $sub_division->id }}"
                                             class="badge border-0"><svg class="w-6 h-6 text-green-800 dark:text-white"
                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                                                 height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -100,7 +108,7 @@
                     </svg>
                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Hapus Divisi Ini?</h3>
                     <div class="flex justify-center w-full">
-                        <form action="/dashboard/sub_division" method="POST" class="d-inline" id="delete">
+                        <form action="/{{ $path }}/sub_division" method="POST" class="d-inline" id="delete">
                             @method('delete')
                             @csrf
                             <input type="hidden" name="id" id="sid">

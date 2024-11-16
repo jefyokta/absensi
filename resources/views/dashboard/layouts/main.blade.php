@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id-ID">
 
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="/logoabsen.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/okta.css">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/scanner.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/scanner.js','resources/js/datatable.js'])
 
 
 

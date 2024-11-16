@@ -52,46 +52,10 @@
     <p style="text-align: center;">{{ Carbon\Carbon::create()->month($month)->translatedFormat('F') }}
         {{ $year }}</p>
 
-
-    <table>
-        <thead>
-            <tr class="header-row">
-                <th rowspan="2">Nik</th>
-                <th rowspan="2">Nama</th>
-                <th rowspan="2">Jabatan</th>
-                @foreach ($dates as $date)
-                    <th colspan="2">{{ $date->day }}</th>
-                @endforeach
-            </tr>
-            <tr class="sub-header">
-                @foreach ($dates as $date)
-                    <th>D</th>
-                    <th>P</th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($employees as $employee)
-                <tr>
-                    <td>{{ $employee->nik }}</td>
-                    <td>{{ $employee->name }}</td>
-                    <td>{{ $employee->role ?? '-' }}</td>
-
-                    @foreach ($dates as $date)
-                        @php
-                            $absen = $employee->absensis->first(function ($absensi) use ($date) {
-                                return $absensi->date === $date->format('j/n/Y');
-                            });
-                        @endphp
-                        <td>{{ $absen ? $absen->in : '-' }}</td>
-                        <td>{{ $absen ? $absen->out : '-' }}</td>
-                    @endforeach
-                </tr>
-            @endforeach
-        </tbody>
-
-
-    </table>
+    @php
+        $i = 1;
+    @endphp
+    @include('dashboard.reports.table')
 </body>
 
 </html>
