@@ -59,8 +59,8 @@ Route::post('/dashboard/export', [DashboardController::class, 'export'])->middle
 Route::put('/dashboard/sub_division', [SubDivisionController::class, 'update'])->middleware(isSuperAdmin::class);
 Route::get('/dashboard/sub_division', [SubDivisionController::class, 'index'])->middleware(isSuperAdmin::class);
 Route::get('/dashboard/sub_division/employees', [SubDivisionController::class, 'show'])->middleware(isSuperAdmin::class);
-Route::get('/dashboard/sub_division/print', [SubDivisionController::class, 'print'])->middleware('admin');
-Route::get('/dashboard/sub_division/export', [SubDivisionController::class, 'export'])->middleware('admin');
+Route::get('/dashboard/sub_division/print', [SubDivisionController::class, 'print'])->middleware(IsAdmins::class);
+Route::get('/dashboard/sub_division/export', [SubDivisionController::class, 'export'])->middleware(IsAdmins::class);
 Route::get('/dashboard/mydivision', [SubDivisionController::class, 'mydivision'])->middleware(AdminHasDivision::class);
 
 
@@ -78,14 +78,12 @@ Route::get('/dashboard', function () {
 
     if (auth()->user()->is_admin || auth()->user()->is_superadmin) {
         $user =  User::select("*")->where('is_superadmin', null);
-
         $admin =  User::select("*")->where('is_admin', 1);
         $employees =  User::select("*")->where('is_superadmin', null)->where('is_admin', null);
         $subdivision = SubDivisions::select("*")->get()->count();
         $today = Absensi::where('date', '=', date('d/m/Y'))->count();
         $hadir = Absensi::where('date', '=', date('d/m/Y'))->where('status', 1)->count();
 
-        // dd($hadir);
         if (auth()->user()->divisions_id) {
             $sub = auth()->user()->divisions_id;
             $user =  $user->where('divisions_id', $sub);
@@ -102,12 +100,12 @@ Route::get('/dashboard', function () {
             })->where('date', '=', date('d/m/Y'))->where('status', 1)->get()->count();
         }
 
-
+// dd($employees->get());
         return view("dashboard.dashboard", [
             "title" => "Dashboard ",
             "users" => $user->get()->count(),
             "admin" => $admin->get()->count(),
-            "employees" => $employees->get()->count(),
+            "employees" => $user->get()->count() -  $admin->get()->count(),
             "subdivision" => $subdivision,
             "presensi" => $today,
             "hadir" => $hadir,
@@ -146,7 +144,7 @@ Route::get('/dashboard/absen/subdivisions', function (Request $request) {
 Route::resource('/dashboard/absensi', AbsensiController::class)->middleware('auth');
 Route::resource('/dashboard/divisions', DivisionController::class)->middleware('admin');
 Route::resource('/dashboard/profile', ProfileController::class, ['parameters' => ['profile' => 'user',]])->middleware('auth');
-Route::resource('/dashboard/employees', UserController::class, ['parameters' => ['employees' => 'user',]])->middleware('admin');
+Route::resource('/dashboard/employees', UserController::class, ['parameters' => ['employees' => 'user',]])->middleware(IsAdmins::class);
 
 
 
@@ -174,6 +172,6 @@ Route::group(['prefix' => 'super', 'middleware' => isSuperAdmin::class], functio
     Route::delete('/sub_division', [SubDivisionController::class, 'delete']);
     Route::get('/subdivisions/create', [SubDivisionController::class, 'create']);
     Route::get("/sub_division/employees", [SubDivisionController::class, 'show']);
-    Route::get('/subdivisions/edit', [SubDivisionController::class, 'edit']);
+    Route::get('/sub_division/edit', [SubDivisionController::class, 'edit']);
     Route::resource("/divisions", DivisionController::class);
 });

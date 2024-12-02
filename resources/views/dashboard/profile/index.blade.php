@@ -46,9 +46,10 @@
                     <h5
                         class="mb-1 text-xl font-medium  dark:text-white text-blue-800  border-b-2 pb-3 w-full text-center mb-3 border-slate-900 ">
                         {{ $user->name }}</h5>
-                    <span
-                        class="text-lg font-semibold text-cyan-500 dark:text-gray-400 ">{{ $user->nik ?? ($user->role ?? '-') }}</span>
-
+                    @if (!auth()->user()->is_superadmin)
+                        <span
+                            class="text-lg font-semibold text-cyan-500 dark:text-gray-400 ">{{ $user->nik ?? ($user->role ?? '-') }}</span>
+                    @endif
                     <span
                         class="text-md font-semibold text-cyan-500 dark:text-gray-400 ">{{ $user->division->division->name ?? ($user->role ?? '-') }}</span>
                     <span
@@ -78,11 +79,13 @@
                     <td>:</td>
                     <td>{{ $user->name }}</td>
                 </tr>
-                <tr class="p-5 my-10 border-b-2">
-                    <td>Nik</td>
-                    <td>:</td>
-                    <td>{{ $user->nik }}</td>
-                </tr>
+                @if (!auth()->user()->is_superadmin)
+                    <tr class="p-5 my-10 border-b-2">
+                        <td>Nik</td>
+                        <td>:</td>
+                        <td>{{ $user->nik }}</td>
+                    </tr>
+                @endif
                 <tr class="p-5 my-10 border-b-2">
                     <td>Posisi</td>
                     <td>:</td>

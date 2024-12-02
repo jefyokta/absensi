@@ -99,8 +99,11 @@ class ProfileController extends Controller
                 return redirect()->back()->with('error', 'Email Sudah DiPakai');
             }
             $a = User::where('phonenumber', $validatedData['phonenumber'])->first();
-            if ($a->phonenumber && $a->id !== $user->id) {
-                return redirect()->back()->with('error', 'Nomor Hp Sudah DiPakai');
+            // dd($a);
+            if ($a->phonumber ?? false) {
+                if ($a->phonenumber && $a->id !== $user->id) {
+                    return redirect()->back()->with('error', 'Nomor Hp Sudah DiPakai');
+                }
             }
 
 

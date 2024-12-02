@@ -51,7 +51,7 @@
 
                             </div>
                         </a>
-                        <a href="" class="w-1/2">
+                        <a href="/super/admin" class="w-1/2">
                             <div
                                 class="glass h-56 min-w-72 flex items-center p-6 rounded-lg m-5 shadow-lg bg-white/10 border-l border-red backdrop-blur-md border border-white/30">
                                 <div class="">
