@@ -19,4 +19,6 @@
             Kamu Bisa Cepat Kembali Bekerja :(
         </p>
     </div>
+    @include('dashboard.absensi.dashboard')
+
 @endsection

@@ -22,7 +22,7 @@ class AbsensiExport implements FromView, WithTitle, WithStyles, WithEvents
     protected $year;
     protected $subdivision;
 
-    public function __construct($employees, $dates, $month, $year,$subdivision)
+    public function __construct($employees, $dates, $month, $year, $subdivision)
     {
         $this->employees = $employees;
         $this->dates = $dates;
@@ -99,7 +99,7 @@ class AbsensiExport implements FromView, WithTitle, WithStyles, WithEvents
 
 
                 $sheet->getStyle("A1:{$lastColumn}{$rowCount}")
-                      ->applyFromArray($styleArray);
+                    ->applyFromArray($styleArray);
 
 
                 foreach (range(1, $lastColumnIndex) as $column) {

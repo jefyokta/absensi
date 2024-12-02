@@ -81,7 +81,7 @@
                     document.getElementById("time").textContent = now.toLocaleTimeString();
                 }
 
-                setInterval(updateTime, 1000); // Update time every 1 second
+                setInterval(updateTime, 1000); 
             });
         </script>
     </div>

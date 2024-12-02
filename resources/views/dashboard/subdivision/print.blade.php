@@ -7,6 +7,7 @@
     <style>
         body {
             margin: 0;
+            font-size: 12px;
         }
 
         table {
@@ -32,8 +33,8 @@
         th,
         td {
             border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
+            text-align: center;
+            padding: 5px;
         }
 
         th {

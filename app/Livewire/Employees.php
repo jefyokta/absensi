@@ -4,27 +4,27 @@ namespace App\Livewire;
 
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Employees extends Component
 {
 
 
+    use WithPagination;
     public $search = "";
-
 
     public function render()
     {
-
-        $users = User::where('is_superadmin', null);
-        if (auth()->user()->divisions_id) {
-            $users = $users->where('divisions_id', auth()->user()->divisions_id);
-        }
-
-        if (strlen($this->search >= 1)) {
-            $users =  $users->where('name', 'like', "%" . $this->search . "%");
-        }
-        $users =  $users->get();
-
-        return view('livewire.employees', ['users' => $users]);
+        return view('livewire.employees', [
+            'users' => User::query()
+                ->where('is_superadmin', null)
+                ->when(auth()->user()->divisions_id, function ($query) {
+                    $query->where('divisions_id', auth()->user()->divisions_id);
+                })
+                ->when(strlen($this->search) >= 1, function ($query) {
+                    $query->where('name', 'like', "%" . $this->search . "%");
+                })
+                ->paginate(20),
+        ]);
     }
 }

@@ -31,4 +31,6 @@
         </div>
 
     </div>
+    @include('dashboard.absensi.dashboard')
+
 @endsection

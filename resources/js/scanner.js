@@ -1,5 +1,6 @@
 import { Html5Qrcode } from "html5-qrcode";
 
+
 document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         const audio = document.createElement("audio");
@@ -11,13 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("form").submit();
             }, 200);
         }
-   
+
         function onScanError(errorMessage) {
             // console.error(`Scan error: ${errorMessage}`);
         }
 
-        const html5QrCode = new Html5Qrcode("reader") || false;
-        if (document.getElementById("reader") && html5QrCode) {
+        if (document.getElementById("reader")) {
+            const html5QrCode = new Html5Qrcode("reader") || false;
             html5QrCode
                 .start(
                     { facingMode: "environment" },

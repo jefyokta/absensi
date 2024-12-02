@@ -12,7 +12,7 @@ class SuperAdminController extends Controller
     public function employees()
     {
 
-        $users = User::where('is_superadmin', null)->get();
+        $users = User::where('is_superadmin', null)->paginate(20);
         $title = "Karyawan";
         return view("superadmin.employees.index", compact("users", "title"));
     }

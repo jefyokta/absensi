@@ -108,6 +108,7 @@
 
     </div>
 
+
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             var badge = document.querySelector('.badge');

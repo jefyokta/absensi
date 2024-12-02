@@ -11,7 +11,11 @@
         class="glass rounded-lg p-5 max-h-content flex justify-between items-center flex-wrap flex-md-nowrap  pt-3 pb-2 mb-3 border-bottom">
         <h1 class="font-semibold p-2 text-xl">Divisi</h1>
         <div class="flex justify-between rounded-lg p-1.5 bg-blue-500  ">
-            <a href="/{{ $path }}/sub_division/create" class="text-white text-s">Tambah Data</a>
+            @if (auth()->user()->is_superadmin)
+                <a href="/super/subdivisions/create" class="text-white text-s">Tambah Data</a>
+            @else
+                <a href="/{{ $path }}/sub_division/create" class="text-white text-s">Tambah Data</a>
+            @endif
         </div>
     </div>
 

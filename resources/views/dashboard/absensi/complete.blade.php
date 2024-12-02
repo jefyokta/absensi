@@ -11,11 +11,13 @@
             <h4>{{ $day . date(', d ') . $month . date(' Y') }}</h4>
         </div>
     </div>
-    <div class="w-full flex justify-center flex-col my-20 glass p-5">
+    <div class="w-full flex justify-center rounded-xl flex-col my-20 glass p-5">
         <h1 class="mb-4 text-center text-5xl font-extrabold leading-none  text-green-700 md:text-5xl lg:text-6xl ">
             Terimakasih Untuk Hari ini</h1>
         <p class="mb-6 text-center text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Sampai
-            Jumpa Di hari Kerja berikutnya
+            jumpa di hari kerja berikutnya
         </p>
     </div>
+    @include('dashboard.absensi.dashboard')
+
 @endsection

@@ -28,7 +28,7 @@
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 rounded-ss-lg">
-                                        ID</th>
+                                        No</th>
                                     <th scope="col" class="px-6 py-3">NAMA</th>
                                     @if (!auth()->user()->divisions_id)
                                         <th scope="col" class="px-6 py-3">
@@ -45,38 +45,35 @@
                                 </tr>
                             </thead>
                             <tbody class="glass rounded-es-lg">
-                                @foreach ($absensis as $absensi)
+                                @foreach ($absensis as $index => $absensi)
                                     @if (auth()->user()->divisions_id)
-                                        @if ($absensi->user->divisions_id === auth()->user()->divisions_id)
-                                            <tr class="dark:bg-gray-800 rounded-lg">
-                                                <td class="px-6 py-4 ">{{ $absensi->id }}</td>
-                                                <td class="px-6 py-4 "><a
-                                                        href="/dashboard/employees/{{ $absensi->user->id }}"
-                                                        class="text-blue-700">{{ $absensi->user->name }}</a> </td>
-                                                <td class="px-6 py-4 ">{{ $absensi->date }}</td>
-                                                <td class="px-6 py-4 ">{{ $absensi->in }}</td>
-                                                <td class="px-6 py-4 ">{{ $absensi->out }}</td>
-                                                @if ($absensi->status)
-                                                    <td class="px-6 py-4 text-green-500">Hadir</td>
-                                                @else
-                                                    <td class="px-6 py-4 text-red-500">Tidak Hadir</td>
-                                                @endif
-                                                <td class="px-6 py-4 "><a href="/dashboard/absensi/{{ $absensi->id }}"
-                                                        class="badge bg-dark border-0"> <svg
-                                                            class="w-6 h-6 text-blue-800 dark:text-white" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                            fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-width="2"
-                                                                d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-                                                            <path stroke="currentColor" stroke-width="2"
-                                                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                                        </svg>Lihat
-                                                    </a></td>
-                                            </tr>
-                                        @endif
+                                        <tr class="dark:bg-gray-800 rounded-lg">
+                                            <td class="px-6 py-4 ">{{ $absensis->firstItem() + $index }}</td>
+                                            <td class="px-6 py-4 "><a href="/dashboard/employees/{{ $absensi->user->id }}"
+                                                    class="text-blue-700">{{ $absensi->user->name }}</a> </td>
+                                            <td class="px-6 py-4 ">{{ $absensi->date }}</td>
+                                            <td class="px-6 py-4 ">{{ $absensi->in }}</td>
+                                            <td class="px-6 py-4 ">{{ $absensi->out }}</td>
+                                            @if ($absensi->status)
+                                                <td class="px-6 py-4 text-green-500">Hadir</td>
+                                            @else
+                                                <td class="px-6 py-4 text-red-500">Tidak Hadir</td>
+                                            @endif
+                                            <td class="px-6 py-4 "><a href="/dashboard/absensi/{{ $absensi->id }}"
+                                                    class="badge bg-dark border-0"> <svg
+                                                        class="w-6 h-6 text-blue-800 dark:text-white" aria-hidden="true"
+                                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-width="2"
+                                                            d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                                        <path stroke="currentColor" stroke-width="2"
+                                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                    </svg>Lihat
+                                                </a></td>
+                                        </tr>
                                     @else
                                         <tr class="dark:bg-gray-800 rounded-lg">
-                                            <td class="px-6 py-4 ">{{ $absensi->id }}</td>
+                                            <td class="px-6 py-4 ">{{ $absensis->firstItem() + $index }}</td>
                                             <td class="px-6 py-4 "><a href="/dashboard/employees/{{ $absensi->user->id }}"
                                                     class="text-blue-700">{{ $absensi->user->name }}</a> </td>
                                             <td class="px-6 py-4 ">{{ $absensi->user->division->name ?? '-' }}</td>
@@ -105,6 +102,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="my-5">
+                            {{ $absensis->links() }}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -37,13 +37,17 @@
                 @foreach ($dates as $date)
                     @php
                         $absen = $employee->absensis->first(function ($absensi) use ($date) {
-                            return $absensi->date === $date->format('j/n/Y');
+                            return $absensi->date === $date->format('d/m/Y');
                         });
-                        if ($absen && $absen->in && $absen->out) {
-                            $t1 = strtotime($absen->in);
-                            $t2 = strtotime($absen->out);
-                            $time = ($t2 - $t1) / 60 / 60 > 8 ? 8 : ($t2 - $t1) / 60 / 60;
-                            $total += $time;
+                        if ($absen) {
+                            if ($absen->in && $absen->out) {
+                                $t1 = strtotime($absen->in);
+                                $t2 = strtotime($absen->out);
+                                $time = ($t2 - $t1) / 60 / 60 > 8 ? 8 : ($t2 - $t1) / 60 / 60;
+                                $total += $time;
+                            } elseif ($absen->in && !$absen->out) {
+                                $total += 4;
+                            }
                         }
                     @endphp
                     <td>{{ $absen ? $absen->in : '-' }}</td>

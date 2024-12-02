@@ -35,7 +35,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'qrcode' => QrCodeGen::generate(),
             "role" => fake()->jobTitle(),
-            'password' => bcrypt('karyawan'), // password
+            'password' => bcrypt('karyawan'), 
             'remember_token' => Str::random(10),
         ];
     }

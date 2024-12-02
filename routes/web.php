@@ -59,8 +59,8 @@ Route::post('/dashboard/export', [DashboardController::class, 'export'])->middle
 Route::put('/dashboard/sub_division', [SubDivisionController::class, 'update'])->middleware(isSuperAdmin::class);
 Route::get('/dashboard/sub_division', [SubDivisionController::class, 'index'])->middleware(isSuperAdmin::class);
 Route::get('/dashboard/sub_division/employees', [SubDivisionController::class, 'show'])->middleware(isSuperAdmin::class);
-Route::get('/dashboard/sub_division/print', [SubDivisionController::class, 'print'])->middleware(isSuperAdmin::class);
-Route::get('/dashboard/sub_division/export', [SubDivisionController::class, 'export'])->middleware(isSuperAdmin::class);
+Route::get('/dashboard/sub_division/print', [SubDivisionController::class, 'print'])->middleware('admin');
+Route::get('/dashboard/sub_division/export', [SubDivisionController::class, 'export'])->middleware('admin');
 Route::get('/dashboard/mydivision', [SubDivisionController::class, 'mydivision'])->middleware(AdminHasDivision::class);
 
 
@@ -82,19 +82,23 @@ Route::get('/dashboard', function () {
         $admin =  User::select("*")->where('is_admin', 1);
         $employees =  User::select("*")->where('is_superadmin', null)->where('is_admin', null);
         $subdivision = SubDivisions::select("*")->get()->count();
-        $today = Absensi::where('date', '=', date('d/m/Y'))->get()->count();
-        $hadir = Absensi::where('date', '=', date('d/m/Y'))->where('status', 1)->get()->count();
+        $today = Absensi::where('date', '=', date('d/m/Y'))->count();
+        $hadir = Absensi::where('date', '=', date('d/m/Y'))->where('status', 1)->count();
+
+        // dd($hadir);
         if (auth()->user()->divisions_id) {
             $sub = auth()->user()->divisions_id;
             $user =  $user->where('divisions_id', $sub);
             $admin = $admin->where('divisions_id', $sub);
             $employees =  $employees->where('divisions_id', $sub);
-            $today = Absensi::select("*")->with('users', function ($query) use ($sub) {
-                $query->where('divisions_id', $sub);
-            })->where('date', '=', date('d/m/Y'))->get()->count();
+            $absenQuery = Absensi::query();
+            $today =  $absenQuery->whereHas('user', function ($query) {
+                $query->where('divisions_id', auth()->user()->divisions_id);
+            })
+                ->where('date', '=', date('d/m/Y'))->get()->count();
 
-            $hadir = Absensi::select("*")->with('users', function ($query) use ($sub) {
-                $query->where('divisions_id', $sub);
+            $hadir =  $absenQuery->whereHas('user', function ($query) {
+                $query->where('divisions_id', auth()->user()->divisions_id);
             })->where('date', '=', date('d/m/Y'))->where('status', 1)->get()->count();
         }
 
@@ -109,10 +113,9 @@ Route::get('/dashboard', function () {
             "hadir" => $hadir,
             "tidakhadir" => $user->get()->count() - $hadir
         ]);
-    }else{
+    } else {
 
-        $absensi =  new AbsensiController;
-        return $absensi->index();
+        return (new AbsensiController)->index();
     }
 })->middleware('auth');
 Route::get('/dashboard/reports', [DashboardController::class, 'reports'])->middleware(IsAdmins::class);
@@ -160,7 +163,7 @@ Route::group(['prefix' => 'super', 'middleware' => isSuperAdmin::class], functio
     Route::put('/admin', [SuperAdminController::class, 'updateAdmin']);
     Route::delete('/admin', [SuperAdminController::class, 'deleteAdmin']);
     Route::get("/admin", [SuperAdminController::class, 'admin']);
-    Route::post("/admin",[SuperAdminController::class,'storeAdmin']);
+    Route::post("/admin", [SuperAdminController::class, 'storeAdmin']);
     Route::get("/admin/create", function () {
         $divisions = SubDivisions::all();
         $title = "Tambah admin";
@@ -168,7 +171,7 @@ Route::group(['prefix' => 'super', 'middleware' => isSuperAdmin::class], functio
     });
     Route::get('/subdivisions', [SubDivisionController::class, 'index']);
 
-    Route::delete('/subdivisions', [SubDivisionController::class, 'delete']);
+    Route::delete('/sub_division', [SubDivisionController::class, 'delete']);
     Route::get('/subdivisions/create', [SubDivisionController::class, 'create']);
     Route::get("/sub_division/employees", [SubDivisionController::class, 'show']);
     Route::get('/subdivisions/edit', [SubDivisionController::class, 'edit']);

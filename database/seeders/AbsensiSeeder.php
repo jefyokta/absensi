@@ -14,7 +14,7 @@ class AbsensiSeeder extends Seeder
      */
     public function run(): void
     {
-        Absensi::factory(20)->create();
+        Absensi::factory(1000)->create();
 
     }
 }

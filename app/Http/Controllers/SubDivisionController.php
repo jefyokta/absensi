@@ -93,17 +93,21 @@ class SubDivisionController extends Controller
     {
 
         $id = $request->query('sd') ?? abort(404);
+        $user = User::where('divisions_id', $id);
+        if ($request->query('search') ?? false) {
+            $user = $user->where('name', 'like', "%" . $request->query('search') . "%");
+        }
         return view('dashboard.subdivision.show', [
             'title' => 'Dashboard | Empolyees',
             'divisions' => SubDivisions::find($id) ?? abort(404),
-            'users' => $users = User::where('divisions_id', $id)->get()
+            'users' => $user->paginate(20)->withQueryString()
         ]);
     }
 
 
     public function print(Request $request)
     {
-        $id = $request->query('sd') ?? abort(404);
+        $id = auth()->user()->division_id ?? $request->query('sd') ?? abort(404);
         $users = User::where('divisions_id', $id)->get();
         $sub = SubDivisions::find($id);
         $subdivision = $sub->name;
@@ -113,7 +117,7 @@ class SubDivisionController extends Controller
 
     public function export(Request $request)
     {
-        $id = $request->query('sd') ?? abort(404);
+        $id = auth()->user()->division_id ?? $request->query('sd') ?? abort(404);
         $users = User::select("name", "nik",  "role", "phonenumber")->where('divisions_id', $id)->get();
         $sub = SubDivisions::find($id);
         $subdivision = $sub->name;
@@ -129,9 +133,9 @@ class SubDivisionController extends Controller
 
         $user = User::find($id);
         $title = $user->division->name;
-        $users = User::where("divisions_id", auth()->user()->divisions_id)->get();
+        $users = User::where("divisions_id", auth()->user()->divisions_id)->paginate(20)->withQueryString();
         $divisions = $user->division;
 
-        return view("dashboard.subdivision.show", compact("users", "divisions", "title"));
+        return view("dashboard.subdivision.mydivision", compact("users", "divisions", "title"));
     }
 }

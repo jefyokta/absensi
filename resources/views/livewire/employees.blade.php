@@ -36,9 +36,9 @@
                             </tr>
                         </thead>
                         <tbody class="glass rounded-es-lg">
-                            @foreach ($users as $user)
+                            @foreach ($users as $i => $user)
                                 <tr class="dark:bg-gray-800 rounded-lg">
-                                    <td class="px-6 py-4 ">{{ $user->id }}</th>
+                                    <td class="px-6 py-4 ">{{ $users->firstItem() + $i }}</th>
                                     <td class="px-6 py-4 ">
                                         <img src="/qrcode?q={{ $user->qrcode }}" alt="" class="max-w-16">
                                     </td>
@@ -47,46 +47,13 @@
                                     <td class="px-6 py-4">{{ $user->nik }}</td>
 
                                     @if ($user->division)
-                                        <td class="px-6 py-4 text-blue-500 cursor-pointer"
+                                        <td class="px-6 py-4 text-blue-500 cursor-pointer" 
                                             data-popover-target="popover-user-{{ $user->id }}">{{ $user->name }}
                                         </td>
-
-
-                                        <div data-popover id="popover-user-{{ $user->id }}" role="tooltip"
-                                            class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
-                                            <div class="p-3">
-                                                <div class="flex items-center justify-between mb-2">
-                                                    <a href="#">
-                                                        <img class="w-10 h-10 qå" src="/qrcode?q={{ $user->qrcode }}"
-                                                            alt="{{ $user->name }}">
-                                                    </a>
-                                                    <div>
-                                                        <button type="button"
-                                                            onclick="location.href = '/dashboard/employees/{{ $user->id }}'"
-                                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Cek</button>
-                                                    </div>
-                                                </div>
-                                                <p
-                                                    class="text-base font-semibold leading-none text-gray-900 dark:text-white">
-                                                    <a href="#">{{ $user->name }}</a>
-                                                </p>
-                                                <p class="mb-3 text-sm font-normal">
-                                                    <a href="#"
-                                                        class="hover:underline">{{ $user->division->division->name ?? '-' }}</a>
-                                                </p>
-                                                <p class="mb-4 text-sm">{{ $user->division->name }}
-                                                </p>
-                                                <a href="#"
-                                                    class="text-blue-600 dark:text-blue-500 hover:underline">{{ $user->role ?? '-' }}</a>.
-
-                                            </div>
-                                            <div data-popper-arrow></div>
-                                        </div>
                                         <td class="px-6 py-4">{{ $user->division->name }}</td>
                                     @else
                                         <td class="px-6 py-4">{{ $user->name }}</td>
                                         <td class="px-6 py-4 ">
-                                            <p class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i>-</p>
                                         </td>
                                     @endif
 
@@ -122,9 +89,43 @@
                                         @endif
                                     </td>
                                 </tr>
+
+                                <div data-popover id="popover-user-{{ $user->id }}" role="tooltip"
+                                    class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
+                                    <div class="p-3">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <a href="#">
+                                                <img class="w-10 h-10 qå" src="/qrcode?q={{ $user->qrcode }}"
+                                                    alt="{{ $user->name }}">
+                                            </a>
+                                            <div>
+                                                <button type="button"
+                                                    onclick="location.href = '/dashboard/employees/{{ $user->id }}'"
+                                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Cek</button>
+                                            </div>
+                                        </div>
+                                        <p class="text-base font-semibold leading-none text-gray-900 dark:text-white">
+                                            <a href="#">{{ $user->name }}</a>
+                                        </p>
+                                        <p class="mb-3 text-sm font-normal">
+                                            <a href="#"
+                                                class="hover:underline">{{ $user->division->division->name ?? '-' }}</a>
+                                        </p>
+                                        <p class="mb-4 text-sm">{{ $user->division->name ?? '' }}
+                                        </p>
+                                        <a href="#"
+                                            class="text-blue-600 dark:text-blue-500 hover:underline">{{ $user->role ?? '-' }}</a>.
+
+                                    </div>
+                                    <div data-popper-arrow></div>
+                                </div>
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="my-5">
+
+                        {{ $users->links() }}
+                    </div>
                 </div>
             </div>
         </div>

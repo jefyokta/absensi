@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('divisions_id')->nullable();
-            $table->string('nik')->unique();
+            $table->string('nik');
             $table->string('address');
             $table->string('qrcode')->unique();
             $table->integer("is_admin")->nullable();

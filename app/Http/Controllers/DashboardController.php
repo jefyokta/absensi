@@ -20,29 +20,41 @@ class DashboardController extends Controller
         if (!auth()->user()->is_admin) {
             return redirect('/dashboard/absensi');
         }
-
+        $absenQuery = Absensi::query();
+        if (auth()->user()->divisions_id) {
+            $absenQuery =  $absenQuery->whereHas('user', function ($query) {
+                $query->where('divisions_id', auth()->user()->divisions_id);
+            });
+        }
         return view('dashboard.index', [
             "title" => "Dashboard",
             'active' => 'dashboard',
-            'absensis' => Absensi::where('date', '=', date('d/m/Y'))->get(),
+            'absensis' => $absenQuery->where('date', '=', date('d/m/Y'))->paginate(20),
             'absensi_by_name' => Absensi::where('user_id', $user_id)->where('date', '=', date('d/m/Y'))->first(),
         ]);
     }
 
     public function reports(Request $req)
     {
-        $absen = Absensi::select('*');
+        $absenQuery = Absensi::query();
+
+        if (auth()->user()->divisions_id) {
+            $absenQuery =  $absenQuery->whereHas('user', function ($query) {
+                $query->where('divisions_id', auth()->user()->divisions_id);
+            });
+        }
+
+        if ($req->query('start') && $req->query('end')) {
+            $absenQuery =   $absenQuery->whereBetween('date', [$req->query('start'), $req->query('end')]);
+        }
+
+        $absen = $absenQuery->paginate(50)->appends($req->all());
+
         $absensiDates = Absensi::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month')
             ->groupBy('year', 'month')
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->get();
-        if ($req->query('start') && $req->query('end')) {
-            $absen->whereBetween('date', [$req->query('start'), $req->query('end')]);
-        }
-
-        $absen = $absen->paginate(50);
-        $absen->appends($req->all());
 
         $subdivision = SubDivisions::all();
 
@@ -51,7 +63,7 @@ class DashboardController extends Controller
             'active' => 'dashboard',
             'absensis' => $absen,
             "months" => $absensiDates,
-            "subdivision" => $subdivision
+            "subdivision" => $subdivision,
         ]);
     }
 
@@ -93,7 +105,10 @@ class DashboardController extends Controller
             }
         }
 
-        $pdf =  Pdf::loadView('dashboard.reports.print', compact('employees', 'dates', 'month', 'year', "subdivision"))
+        $pdf =  Pdf::loadView(
+            'dashboard.reports.print',
+            compact('employees', 'dates', 'month', 'year', "subdivision")
+        )
             ->setPaper("a4", 'landscape');
 
         return $pdf->download('report.pdf');
@@ -103,15 +118,7 @@ class DashboardController extends Controller
     public function export(Request $request)
     {
         $date = $request->input('date', date('m/Y'));
-        if (auth()->user()->is_superadmin) {
-            $sub = $request->input("subdivision", 1);
-        } else {
-            if (!is_null(auth()->user()->divisions_id)) {
-
-                $sub = auth()->user()->divisions_id;
-            }
-            $sub = $request->input("subdivision", 1);
-        }
+        $sub = auth()->user()->divisions_id ?? $request->input("subdivision", 1);
         [$month, $year] = explode('/', $date);
 
         $dates = collect();

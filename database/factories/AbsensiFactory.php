@@ -22,11 +22,11 @@ class AbsensiFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::all()->random()->id,
-            'date' => "1/10/2024",
-            'in' => fake()->date('H:i'),
-            'out' => fake()->date('H:i'),
-            'status' => rand(0,1)
+            'user_id' => User::all()->unique()->random()->id,
+            'date' => date('d/m/Y'),
+            'in' => '07:00',
+            'out' => null,
+            'status' => 1
         ];
     }
 }

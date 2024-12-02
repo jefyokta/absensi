@@ -15,7 +15,9 @@
         </div>
 
     </div>
-    @include('superadmin.components.employees')
+    {{-- @include('superadmin.components.employees') --}}
+
+    <livewire:employees />
     {{--
     <div>
         <div class="max-w-md my-5 mx-auto">
