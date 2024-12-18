@@ -6,7 +6,7 @@
             <div class="card">
                 <h5 class="card-header p-3 font-semibold text-4xl"> Absen</h5>
                 <div class="card-body">
-                    <form class=" mx-auto glass p-5 w-8/12 rounded-lg" action="/dashboard/absensi" method="POST"
+                    <form class=" mx-auto glass p-5 w-8/12 rounded-lg" action="/absen/create" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="user_id" value="{{ $user->id }}">
@@ -81,7 +81,7 @@
                     document.getElementById("time").textContent = now.toLocaleTimeString();
                 }
 
-                setInterval(updateTime, 1000); 
+                setInterval(updateTime, 1000);
             });
         </script>
     </div>

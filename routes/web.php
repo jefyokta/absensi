@@ -100,7 +100,7 @@ Route::get('/dashboard', function () {
             })->where('date', '=', date('d/m/Y'))->where('status', 1)->get()->count();
         }
 
-// dd($employees->get());
+        // dd($employees->get());
         return view("dashboard.dashboard", [
             "title" => "Dashboard ",
             "users" => $user->get()->count(),
@@ -142,6 +142,8 @@ Route::get('/dashboard/absen/subdivisions', function (Request $request) {
 
 
 Route::resource('/dashboard/absensi', AbsensiController::class)->middleware('auth');
+
+Route::post('/absen/create', [AbsensiController::class, 'store'])->middleware('auth');
 Route::resource('/dashboard/divisions', DivisionController::class)->middleware('admin');
 Route::resource('/dashboard/profile', ProfileController::class, ['parameters' => ['profile' => 'user',]])->middleware('auth');
 Route::resource('/dashboard/employees', UserController::class, ['parameters' => ['employees' => 'user',]])->middleware(IsAdmins::class);
